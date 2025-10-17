@@ -18,7 +18,7 @@ class CarFactory extends Factory
         return [
             'name' => ucfirst($type) . ' ' . $this->faker->unique()->numerify('###'),
             'type' => $carTypeEnum->value,
-            'license_plate' => 'T000EST',
+            'license_plate' => strtoupper($this->faker->unique()->bothify('??###??')),
             'capacity' => $carTypeEnum->capacity(),
             'base_price_cents' => $this->faker->numberBetween(2000, 8000),
             'apk_expiry' => $this->faker->dateTimeBetween('+1 month', '+2 years')->format('Y-m-d'),
