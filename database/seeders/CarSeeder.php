@@ -10,7 +10,7 @@ class CarSeeder extends Seeder
 {
     public function run(): void
     {
-        $uniquePlates = $this->generateUniqueLicensePlates(20);
+        $uniquePlates = $this->generateUniqueLicensePlates(25);
 
         foreach ($uniquePlates as $plate) {
             Car::factory()->create([

@@ -17,7 +17,7 @@ class ReservationSeeder extends Seeder
         foreach ($cars as $car) {
             $startDate = Carbon::now()->subMonth();
 
-            for ($i = 0; $i < 5; $i++) {
+            for ($i = 0; $i < 2; $i++) {
                 $duration = rand(2, 14);
 
                 Reservation::factory()

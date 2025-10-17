@@ -3,11 +3,10 @@
 
         @if($step === 1)
             <h2 class="text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-gray-100">
-                Step 1: Dates & Passengers
+                Dates & Passengers
             </h2>
 
             <div class="space-y-5 mt-6">
-
                 @if($alternativeDates && $alternativeDates->isNotEmpty())
                     <div class="relative">
                         <input type="number" wire:model="passengers" min="1"
@@ -32,7 +31,6 @@
                             </button>
                         @endforeach
                     </div>
-
                 @else
                     <input type="number" wire:model="passengers" min="1"
                            placeholder="Passengers"
@@ -56,33 +54,48 @@
                         Next
                     </button>
                 @endif
-
             </div>
-
 
         @elseif($step === 2)
             <h2 class="text-3xl font-semibold text-center mb-6 text-gray-800 dark:text-gray-100">
-                Step 2: Select a Car
+                Select a Car
             </h2>
 
             <p class="text-sm text-gray-600 mb-4 text-center">
-                Selected Range: <span class="font-medium">{{ $start_date }} → {{ $end_date }}</span>
+                <span class="font-medium">{{ $start_date }} → {{ $end_date }}</span>
             </p>
 
             <div class="space-y-3">
-                @forelse($availableCars as $car)
-                    <label class="flex items-center border p-3 rounded-lg cursor-pointer hover:shadow-md transition-all">
-                        <input type="radio" wire:model="selectedCarId" value="{{ $car->id }}"
-                               class="mr-3">
-                        <span class="text-gray-800 dark:text-gray-100 font-medium">
-                            {{ $car->name }} ({{ $car->formatted_license_plate }}) - Capacity: {{ $car->capacity }}
-                        </span>
-                    </label>
-                @empty
-                    <p class="text-center text-gray-500 dark:text-gray-400">
-                        No cars available for selected dates & passengers.
-                    </p>
-                @endforelse
+                @foreach($availableCars as $car)
+                    <div
+                        wire:key="car-{{ $car['id'] }}"
+                        wire:click="$set('selectedCarId', {{ $car['id'] }})"
+                        @class([
+                            'cursor-pointer p-4 rounded-lg border transition-all mb-3',
+                            'border-indigo-600 bg-indigo-50 dark:bg-gray-700' => $selectedCarId === $car['id'],
+                            'border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800' => $selectedCarId !== $car['id'],
+                        ])
+                    >
+                        <div class="flex items-center justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-gray-800 dark:text-gray-100 font-semibold text-lg">
+                                    {{ $car['name'] }}
+                                </span>
+                                <span class="text-gray-600 dark:text-gray-400 text-sm">
+                                    Max. {{ $car['capacity'] }} passengers
+                                </span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-gray-800 dark:text-gray-100 font-bold text-lg">
+                                    ${{ number_format($car['dailyPriceCents'] / 100, 2) }}/day
+                                </span>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                                    Total: ${{ number_format($car['totalPriceCents'] / 100, 2) }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
             <div class="mt-6 flex justify-between">
@@ -90,7 +103,6 @@
                         class="px-6 py-2 border rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
                     Back
                 </button>
-
                 @if($availableCars && $availableCars->isNotEmpty())
                     <button wire:click="nextStep"
                             class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-all">
@@ -102,17 +114,17 @@
         @elseif($step === 3)
             <div class="space-y-4">
                 <h2 class="text-3xl font-semibold mb-4 text-gray-800 dark:text-gray-100 text-center">
-                    Step 3: Review & Quote
+                    Review & Quote
                 </h2>
 
                 <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-5 space-y-2">
                     <p><strong>Car:</strong> {{ optional(\App\Models\Car::find($selectedCarId))->name }}</p>
-                    <p><strong>Start Date:</strong> {{ $start_date }}</p>
-                    <p><strong>End Date:</strong> {{ $end_date }}</p>
-                    <p><strong>Passengers:</strong> {{ $passengers }}</p>
-                    <p><strong>Total Price:</strong> €{{ number_format($quoteCents / 100, 2) }}</p>
-                    <p><strong>Daily Price:</strong> €{{ number_format($dailyPriceCents / 100, 2) }} / day</p>
+                    <p><strong>Pick-Up Date:</strong> {{ $start_date }}</p>
+                    <p><strong>Return Date:</strong> {{ $end_date }}</p>
                     <p><strong>Duration:</strong> {{ $durationDays }} days</p>
+                    <p><strong>Passengers:</strong> {{ $passengers }}</p>
+                    <p><strong>Daily Price:</strong> ${{ number_format($dailyPriceCents / 100, 2) }}</p>
+                    <p><strong>Total Price:</strong> ${{ number_format($quoteCents / 100, 2) }}</p>
                 </div>
 
                 <div class="mt-6 flex justify-between">
@@ -139,7 +151,6 @@
                 {{ session('error') }}
             </div>
         @endif
-
-
+        
     </div>
 </div>
