@@ -12,6 +12,9 @@
 
     <!-- Styles / Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Livewire Styles -->
+    @livewireStyles
 </head>
 <body class="antialiased min-h-screen flex flex-col">
 
@@ -21,24 +24,16 @@
         <a href="{{ url('/') }}" class="text-xl font-semibold">
             {{ config('app.name', 'Laravel') }}
         </a>
-
-        {{-- Auth Links --}}
         <div>
             @auth
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button
-                            type="submit"
-                            class="text-sm text-red-600 hover:underline font-medium"
-                    >
+                    <button type="submit" class="text-sm text-red-600 hover:underline font-medium">
                         Logout
                     </button>
                 </form>
             @else
-                <a
-                        href="{{ route('login') }}"
-                        class="text-sm text-indigo-600 hover:underline font-medium"
-                >
+                <a href="{{ route('login') }}" class="text-sm text-indigo-600 hover:underline font-medium">
                     Admin Login
                 </a>
             @endauth
@@ -56,5 +51,7 @@
     &copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. All rights reserved.
 </footer>
 
+<!-- Livewire Scripts -->
+@livewireScripts
 </body>
 </html>
