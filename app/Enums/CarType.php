@@ -21,4 +21,13 @@ enum CarType: string
             self::CONVERTIBLE => 2,
         };
     }
+
+    public function title(): string
+    {
+        return match($this) {
+            self::MINIVAN => 'Minivan',
+            self::SEDAN => 'Sedan',
+            self::CONVERTIBLE => 'Convertible',
+        };
+    }
 }

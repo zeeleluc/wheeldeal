@@ -6,10 +6,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-
     <!-- Styles / Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -24,8 +20,12 @@
         <a href="{{ url('/') }}" class="text-xl font-semibold">
             {{ config('app.name', 'Laravel') }}
         </a>
-        <div>
+        <div class="flex items-center space-x-4">
             @auth
+                <a href="{{ route('admin.cars') }}" class="text-sm text-indigo-600 hover:underline font-medium">
+                    Cars
+                </a>
+
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="text-sm text-red-600 hover:underline font-medium">
