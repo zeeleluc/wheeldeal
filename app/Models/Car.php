@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CarType;
 use App\Utils\DutchLicensePlatePatterns;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -42,5 +43,19 @@ class Car extends Model
         }
 
         return $value;
+    }
+
+    public function isAvailableForPeriod(Carbon $start, Carbon $end): bool
+    {
+        return !$this->reservations()
+            ->where(function ($query) use ($start, $end) {
+                $query->whereBetween('start_date', [$start, $end])
+                    ->orWhereBetween('end_date', [$start, $end])
+                    ->orWhere(function ($q) use ($start, $end) {
+                        $q->where('start_date', '<=', $start)
+                            ->where('end_date', '>=', $end);
+                    });
+            })
+            ->exists();
     }
 }

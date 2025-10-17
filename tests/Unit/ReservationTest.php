@@ -70,4 +70,44 @@ class ReservationTest extends TestCase
 
         $this->assertTrue($reservation->end_date->eq($expectedEndDate));
     }
+
+    public function testCarCannotBeDoubleBooked(): void
+    {
+        $car = Car::factory()->create();
+        $user = User::factory()->create();
+
+        $startDate = Carbon::parse('2025-09-01');
+        $endDate = Carbon::parse('2025-09-05');
+
+        Reservation::factory()
+            ->forCar($car)
+            ->forUser($user)
+            ->startingAt($startDate)
+            ->duration(5)
+            ->create();
+
+        $this->assertFalse($car->isAvailableForPeriod(
+            Carbon::parse('2025-09-03'),
+            Carbon::parse('2025-09-07')
+        ));
+    }
+
+    public function testCarCanBeBookedOnDifferentDates(): void
+    {
+        $car = Car::factory()->create();
+        $user = User::factory()->create();
+
+        $startDate = Carbon::parse('2025-09-01');
+        $endDate = Carbon::parse('2025-09-05');
+
+        Reservation::factory()->forCar($car)->forUser($user)
+            ->startingAt($startDate)
+            ->duration(5)
+            ->create();
+
+        $this->assertTrue($car->isAvailableForPeriod(
+            Carbon::parse('2025-09-10'),
+            Carbon::parse('2025-09-12')
+        ));
+    }
 }

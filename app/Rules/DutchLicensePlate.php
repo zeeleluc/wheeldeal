@@ -12,7 +12,7 @@ class DutchLicensePlate implements ValidationRule
         $clean = strtoupper(str_replace([' ', '-'], '', $value));
 
         if (!preg_match(DutchLicensePlatePatterns::validationPatterns(), $clean)) {
-            $fail("This is not a valid Dutch license plate.");
+            $fail('This is not a valid Dutch license plate.');
         }
     }
 }

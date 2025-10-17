@@ -7,15 +7,24 @@ use Carbon\Carbon;
 
 class PricingService
 {
-    public static function calculatePrice(Car $car, Carbon $startDate, Carbon $endDate): int
+    public static function calculatePrice(Car $car, Carbon $startDate, Carbon $endDate): array
     {
         $start = $startDate->copy();
         $end = $endDate->copy();
 
         $days = $start->diffInDays($end) + 1;
+
         $totalPriceCents = $days * $car->base_price_cents;
 
-        return self::applyDynamicPricing($car, $start, $end, $totalPriceCents);
+        $totalPriceCents = self::applyDynamicPricing($car, $start, $end, $totalPriceCents);
+
+        $dailyPriceCents = intdiv($totalPriceCents, $days);
+
+        return [
+            'total' => $totalPriceCents,
+            'daily' => $dailyPriceCents,
+            'days' => $days,
+        ];
     }
 
     protected static function applyDynamicPricing(Car $car, Carbon $start, Carbon $end, int $currentPriceCents): int
