@@ -33,7 +33,7 @@ class ReservationTest extends TestCase
             ->create();
     }
 
-    public function test_total_price_is_correct()
+    public function testTotalPriceIsCorrect()
     {
         $duration = 4;
         $basePrice = 12000;
@@ -48,7 +48,7 @@ class ReservationTest extends TestCase
         $this->assertEquals($expectedPrice, $reservation->total_price_cents);
     }
 
-    public function test_duration_is_calculated_correctly()
+    public function testDurationIsCalculatedCorrectly()
     {
         $duration = 5;
         $reservation = $this->createReservation(['duration' => $duration]);
@@ -56,7 +56,7 @@ class ReservationTest extends TestCase
         $this->assertEquals($duration, $reservation->days);
     }
 
-    public function test_end_date_is_calculated_correctly()
+    public function testEndDateIsCalculatedCorrectly()
     {
         $startDate = Carbon::parse('2025-08-20');
         $duration = 3;
