@@ -9,5 +9,6 @@ return [
     'rental' => [
         'min_days' => 1,
         'max_days' => 30,
+        'max_days_shift' => 14,
     ],
 ];

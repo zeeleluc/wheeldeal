@@ -22,6 +22,7 @@ class ReservationForm extends Component
     public int $passengers = 2;
 
     public ?Collection $availableCars = null;
+    public Collection $alternativeDates;
     public ?int $selectedCarId = null;
     public ?int $quoteCents = null;
     public ?int $dailyPriceCents = null;
@@ -32,6 +33,19 @@ class ReservationForm extends Component
     public function mount(): void
     {
         $this->resetForm();
+    }
+
+    public function selectAlternativeDates(string $start, string $end): void
+    {
+        $this->start_date = $start;
+        $this->end_date = $end;
+
+        $this->fetchAvailableCars();
+
+        if ($this->availableCars->isNotEmpty()) {
+            $this->alternativeDates = collect();
+            $this->step = 2;
+        }
     }
 
     public function updatedStartDate($value)
@@ -47,6 +61,13 @@ class ReservationForm extends Component
         }
 
         $this->end_date_max = $start->copy()->addDays($rentalConfig['max_days'] - 1)->toDateString();
+    }
+
+    public function updatedPassengers($value)
+    {
+        if ($this->alternativeDates->isNotEmpty()) {
+            $this->clearAlternativeDates();
+        }
     }
 
     public function nextStep(): void
@@ -72,11 +93,20 @@ class ReservationForm extends Component
                         }
                     },
                 ],
-                'passengers' => ['required', 'integer', 'min:1'],
+                'passengers' => ['required', 'integer', 'min:1', 'max:7'],
             ]);
 
             $this->fetchAvailableCars();
-            $this->step = 2;
+
+            if ($this->availableCars->isNotEmpty()) {
+                $this->alternativeDates = collect();
+                $this->step = 2;
+            } else {
+                $this->suggestAlternativeDates(
+                    Carbon::parse($this->start_date),
+                    Carbon::parse($this->end_date)
+                );
+            }
         } elseif (2 === $this->step) {
             $this->validate([
                 'selectedCarId' => ['required', 'exists:cars,id'],
@@ -103,6 +133,42 @@ class ReservationForm extends Component
             ->get()
             ->filter(fn ($car) => $car->isAvailableForPeriod($start, $end))
             ->values();
+
+        if ($this->availableCars->isEmpty()) {
+            $this->suggestAlternativeDates($start, $end);
+
+            if ($this->alternativeDates->isEmpty()) {
+                session()->flash('error', 'No cars available for the selected dates and passengers.');
+            }
+        } else {
+            $this->alternativeDates = collect();
+            $this->step = 2;
+        }
+    }
+
+    protected function suggestAlternativeDates(Carbon $start, Carbon $end): void
+    {
+        $this->alternativeDates = collect();
+
+        $maxDaysToShift = config('car.rental.max_days_shift');
+
+        for ($i = 1; $i <= $maxDaysToShift; ++$i) {
+            $newStart = $start->copy()->addDays($i);
+            $newEnd = $end->copy()->addDays($i);
+
+            $availableCars = Car::where('capacity', '>=', $this->passengers)
+                ->get()
+                ->filter(fn ($car) => $car->isAvailableForPeriod($newStart, $newEnd))
+                ->values();
+
+            if ($availableCars->isNotEmpty()) {
+                $this->alternativeDates->push([
+                    'start_date' => $newStart->toDateString(),
+                    'end_date' => $newEnd->toDateString(),
+                    'cars' => $availableCars,
+                ]);
+            }
+        }
     }
 
     protected function calculateQuote(): void
@@ -146,6 +212,11 @@ class ReservationForm extends Component
         return redirect()->route('reservations.show', $reservation);
     }
 
+    public function clearAlternativeDates(): void
+    {
+        $this->alternativeDates = collect();
+    }
+
     protected function resetForm(): void
     {
         $this->step = 1;
@@ -154,6 +225,7 @@ class ReservationForm extends Component
         $this->passengers = 2;
 
         $this->availableCars = null;
+        $this->alternativeDates = collect();
         $this->selectedCarId = null;
         $this->quoteCents = null;
         $this->dailyPriceCents = null;
