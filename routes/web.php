@@ -29,5 +29,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
     Route::get('/payment/{reservation}', [PaymentController::class, 'show'])->name('payment.show');
     Route::post('/payment/{reservation}', [PaymentController::class, 'pay'])->name('payment.pay');
+    Route::get('/payment/status/{status}', [PaymentController::class, 'status'])->name('payment.status');
     Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
 });
