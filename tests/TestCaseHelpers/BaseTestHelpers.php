@@ -21,14 +21,20 @@ trait BaseTestHelpers
     {
         $car = $overrides['car'] ?? $this->createCar();
         $user = $overrides['user'] ?? User::factory()->create();
+        $status = $overrides['status'] ?? null;
         $start = $overrides['start_date'] ?? Carbon::today();
         $duration = $overrides['duration'] ?? 3;
 
-        return Reservation::factory()
+        $factory = Reservation::factory()
             ->forCar($car)
             ->forUser($user)
             ->startingAt($start)
-            ->duration($duration)
-            ->create();
+            ->duration($duration);
+
+        if ($status) {
+            $factory->status($status);
+        }
+
+        return $factory->create();
     }
 }

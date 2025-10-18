@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Carbon\Carbon;
@@ -64,5 +65,45 @@ class ReservationTest extends TestCase
             Carbon::parse('2025-09-10'),
             Carbon::parse('2025-09-12')
         ));
+    }
+
+    public function testUserCanBookIfNoRecentReservation()
+    {
+        $user = User::factory()->create();
+
+        $this->assertFalse($user->hasRecentReservation());
+    }
+
+    public function testUserCannotBookIfHasRecentReservation()
+    {
+        $user = User::factory()->create();
+        $car = $this->createCar();
+
+        $this->createReservation([
+            'car' => $car,
+            'user' => $user,
+            'start_date' => Carbon::parse(now()->format('Y-m-d')),
+            'duration' => 5,
+        ]);
+
+        $this->assertTrue($user->hasRecentReservation());
+    }
+
+    public function testUserCanBookIfHasOldReservation()
+    {
+        $user = User::factory()->create();
+        $car = $this->createCar();
+
+        $reservation = $this->createReservation([
+            'car' => $car,
+            'user' => $user,
+            'start_date' => Carbon::parse(now()->format('Y-m-d')),
+            'duration' => 5,
+        ]);
+
+        $reservation->created_at = Carbon::parse(now()->subMonth()->format('Y-m-d'));
+        $reservation->save();
+
+        $this->assertFalse($user->hasRecentReservation());
     }
 }

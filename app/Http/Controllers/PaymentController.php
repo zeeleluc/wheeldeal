@@ -10,7 +10,9 @@ class PaymentController extends Controller
 {
     public function show(Reservation $reservation)
     {
-        Gate::authorize('pay', $reservation);
+        if (!Gate::check('pay', $reservation)) {
+            return redirect()->route('user.show', $reservation->user_id);
+        }
 
         return view('payment.show', compact('reservation'));
     }
@@ -19,7 +21,7 @@ class PaymentController extends Controller
     {
         Gate::authorize('pay', $reservation);
 
-        $reservation->update(['paid_at' => now()]);
+        $reservation->pay();
 
         return redirect()->route('reservations.show', $reservation);
     }

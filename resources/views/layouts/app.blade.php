@@ -37,26 +37,28 @@
 
             {{-- Authenticated Menu --}}
             @auth
-                <div class="flex items-center space-x-3 bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-xl shadow-sm">
-                    <span class="text-sm text-gray-800 dark:text-gray-200 font-medium">
-                    👋 {{ auth()->user()->name }}
-                </span>
+                <a href="{{ route('user.show', auth()->user()) }}">
+                    <div class="flex items-center space-x-3 bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-xl shadow-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                        <span class="text-sm text-gray-800 dark:text-gray-200 font-medium">
+                            👋 {{ auth()->user()->name }}
+                        </span>
+                    </div>
+                </a>
 
-                    @if(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.cars') }}"
-                           class="px-3 py-1.5 text-sm font-medium text-indigo-600 bg-white dark:bg-gray-700 border border-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all">
-                            Fleet
-                        </a>
-                    @endif
+                @if(auth()->user()->isAdmin())
+                    <a href="{{ route('admin.cars') }}"
+                       class="px-3 py-1.5 text-sm font-medium text-indigo-600 bg-white dark:bg-gray-700 border border-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all">
+                        Fleet
+                    </a>
+                @endif
 
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit"
-                                class="px-3 py-1.5 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors">
-                            Logout
-                        </button>
-                    </form>
-                </div>
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit"
+                            class="px-3 py-1.5 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors">
+                        Logout
+                    </button>
+                </form>
             @endauth
 
         </div>
@@ -68,9 +70,7 @@
 <livewire:draft-reservation-bar />
 
 <!-- Main Content -->
-<main class="flex-1 container mx-auto p-6">
-    @yield('content')
-</main>
+@yield('content')
 
 <!-- Footer -->
 <footer class="p-4 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600">

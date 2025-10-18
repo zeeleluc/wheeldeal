@@ -17,9 +17,13 @@ class ReservationPolicy
         return $user->isAdmin() || $reservation->user_id === $user->id;
     }
 
-    public function create(User $user): bool
+    public function create(?User $user): bool
     {
-        return $user->isAdmin();
+        if (!$user) {
+            return true;
+        }
+
+        return ! $user->hasRecentReservation();
     }
 
     public function update(User $user, Reservation $reservation): bool
@@ -34,10 +38,10 @@ class ReservationPolicy
 
     public function pay(User $user, Reservation $reservation): bool
     {
-        if ($reservation->user_id && $reservation->user_id === $user->id) {
-            return !$reservation->isPaid();
+        if ($reservation->user_id !== $user->id) {
+            return false;
         }
 
-        return false;
+        return $reservation->isPendingPayment();
     }
 }

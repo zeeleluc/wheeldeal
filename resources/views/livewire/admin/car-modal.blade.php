@@ -1,8 +1,9 @@
 <div>
     {{-- ADD NEW BUTTON --}}
     <button wire:click="openForCreate"
-            class="mb-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors">
-        Add New Car
+        class="mb-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
+    >
+        {{ __('Add New Car') }}
     </button>
 
     {{-- MODAL --}}

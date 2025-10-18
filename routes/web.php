@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminCarsController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,6 +17,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/reservation', [ReservationController::class, 'create'])->name('reservation.create');
 
 Route::middleware(['auth'])->group(function () {
 
@@ -28,4 +29,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
     Route::get('/payment/{reservation}', [PaymentController::class, 'show'])->name('payment.show');
     Route::post('/payment/{reservation}', [PaymentController::class, 'pay'])->name('payment.pay');
+    Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
 });

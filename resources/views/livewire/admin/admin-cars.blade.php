@@ -1,5 +1,8 @@
 <div>
-    @livewire('admin.car-modal')
+    <div class="flex items-center justify-between mb-4">
+        <h1 class="text-2xl font-bold">Car Fleet</h1>
+        @livewire('admin.car-modal')
+    </div>
 
     <div class="overflow-x-auto mt-6">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">

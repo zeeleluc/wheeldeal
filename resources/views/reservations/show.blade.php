@@ -43,13 +43,27 @@
                 <div class="flex justify-between items-center mt-2">
                     <span class="font-medium">Status:</span>
                     <div class="flex items-center space-x-2">
-                        @if($reservation->paid_at)
-                            <span class="w-4 h-4 bg-green-500 rounded-full"></span>
-                            <span class="text-green-600 font-semibold">Paid</span>
-                        @else
-                            <span class="w-4 h-4 border-4 border-orange-400 border-t-orange-600 rounded-full animate-spin"></span>
-                            <span class="text-orange-600 font-semibold">Pending</span>
-                        @endif
+                        @switch($reservation->status)
+                            @case(\App\Enums\ReservationType::DRAFT)
+                                <span class="w-4 h-4 bg-gray-400 rounded-full"></span>
+                                <span class="text-gray-600 font-semibold">Draft</span>
+                                @break
+
+                            @case(\App\Enums\ReservationType::PENDING_PAYMENT)
+                                <span class="w-4 h-4 border-4 border-orange-400 border-t-orange-600 rounded-full animate-spin"></span>
+                                <span class="text-orange-600 font-semibold">Pending Payment</span>
+                                @break
+
+                            @case(\App\Enums\ReservationType::PAID)
+                                <span class="w-4 h-4 bg-green-500 rounded-full"></span>
+                                <span class="text-green-600 font-semibold">Paid</span>
+                                @break
+
+                            @case(\App\Enums\ReservationType::CANCELLED)
+                                <span class="w-4 h-4 bg-red-500 rounded-full"></span>
+                                <span class="text-red-600 font-semibold">Cancelled</span>
+                                @break
+                        @endswitch
                     </div>
                 </div>
                 @if($reservation->paid_at)

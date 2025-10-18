@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ReservationType;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Models\Car;
@@ -22,6 +23,8 @@ class ReservationFactory extends Factory
 
     protected int|null $durationDays = null;
 
+    public ReservationType|null $status = null;
+
     public function definition(): array
     {
         $endDate = EndDateService::calculateEndDate($this->startingAt, $this->durationDays);
@@ -30,6 +33,7 @@ class ReservationFactory extends Factory
         return [
             'user_id' => $this->user->id,
             'car_id' => $this->car->id,
+            'status' => $this->status ?? ReservationType::PAID,
             'start_date' => $this->startingAt,
             'end_date' => $endDate,
             'passengers' => $this->faker->numberBetween(1, $this->car->capacity),
@@ -68,6 +72,13 @@ class ReservationFactory extends Factory
     {
         $factory = clone $this;
         $factory->durationDays = $days;
+        return $factory;
+    }
+
+    public function status(ReservationType $status): self
+    {
+        $factory = clone $this;
+        $factory->status = $status;
         return $factory;
     }
 }
