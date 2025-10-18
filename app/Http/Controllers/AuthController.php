@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\DraftReservationAssigned;
-use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,6 +33,7 @@ class AuthController extends Controller
 
             if ($user && $draftId) {
                 event(new DraftReservationAssigned($user, $draftId));
+
                 return redirect()->route('payment.show', ['reservation' => $draftId]);
             }
 
@@ -79,6 +79,7 @@ class AuthController extends Controller
 
         if ($user && $draftId) {
             event(new DraftReservationAssigned($user, $draftId));
+
             return redirect()->route('payment.show', ['reservation' => $draftId]);
         }
 

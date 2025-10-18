@@ -231,9 +231,9 @@ class ReservationForm extends Component
             'total_price_cents' => $this->quoteCents,
         ]);
 
-        Session::put('draft_reservation_id', $reservation->id);
-
         if (!$userId) {
+            Session::put('draft_reservation_id', $reservation->id);
+
             return redirect()->route('login');
         }
 

@@ -64,6 +64,9 @@
     </div>
 </header>
 
+<!-- Draft Reservation Alert -->
+<livewire:draft-reservation-bar />
+
 <!-- Main Content -->
 <main class="flex-1 container mx-auto p-6">
     @yield('content')
