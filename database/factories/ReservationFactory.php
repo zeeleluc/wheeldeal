@@ -34,6 +34,12 @@ class ReservationFactory extends Factory
             'end_date' => $endDate,
             'passengers' => $this->faker->numberBetween(1, $this->car->capacity),
             'total_price_cents' => $totalPriceCents['total'],
+            'paid_at' => $this->startingAt
+                ->clone()
+                ->subDays(rand(1, 7))
+                ->subHours(rand(1, 20))
+                ->subMinutes(rand(1, 50))
+                ->subSeconds(rand(1, 50)),
         ];
     }
     

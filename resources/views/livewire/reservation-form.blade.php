@@ -117,14 +117,35 @@
                     Review & Quote
                 </h2>
 
-                <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-5 space-y-2">
-                    <p><strong>Car:</strong> {{ optional(\App\Models\Car::find($selectedCarId))->name }}</p>
-                    <p><strong>Pick-Up Date:</strong> {{ $start_date }}</p>
-                    <p><strong>Return Date:</strong> {{ $end_date }}</p>
-                    <p><strong>Duration:</strong> {{ $durationDays }} days</p>
-                    <p><strong>Passengers:</strong> {{ $passengers }}</p>
-                    <p><strong>Daily Price:</strong> ${{ number_format($dailyPriceCents / 100, 2) }}</p>
-                    <p><strong>Total Price:</strong> ${{ number_format($quoteCents / 100, 2) }}</p>
+                <div class="space-y-2 text-gray-800 dark:text-gray-100">
+                    <div class="flex justify-between">
+                        <span class="font-medium">Car:</span>
+                        <span>{{ optional(\App\Models\Car::find($selectedCarId))->name }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium">Pick-Up Date:</span>
+                        <span>{{ $start_date }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium">Return Date:</span>
+                        <span>{{ $end_date }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium">Duration:</span>
+                        <span>{{ $durationDays }} days</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium">Passengers:</span>
+                        <span>{{ $passengers }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium">Daily Price:</span>
+                        <span>${{ number_format($dailyPriceCents / 100, 2) }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-medium">Total Price:</span>
+                        <span class="font-bold">${{ number_format($quoteCents / 100, 2) }}</span>
+                    </div>
                 </div>
 
                 <div class="mt-6 flex justify-between">

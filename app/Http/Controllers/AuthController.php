@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DraftReservationAssigned;
+use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -23,10 +26,18 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
+        $draftId = Session::pull('draft_reservation_id');
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $user = Auth::user();
 
-            return redirect()->intended('/dashboard');
+            if ($user && $draftId) {
+                event(new DraftReservationAssigned($user, $draftId));
+                return redirect()->route('payment.show', ['reservation' => $draftId]);
+            }
+
+            return redirect()->route('welcome');
         }
 
         return back()->withErrors([
@@ -40,7 +51,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('welcome');
     }
 
     public function showRegister(): View
@@ -62,10 +73,15 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        // event(new Registered($user));
+        $draftId = Session::pull('draft_reservation_id');
 
         Auth::login($user);
 
-        return redirect('/dashboard')->with('success', 'Please check your email to verify your account.');
+        if ($user && $draftId) {
+            event(new DraftReservationAssigned($user, $draftId));
+            return redirect()->route('payment.show', ['reservation' => $draftId]);
+        }
+
+        return redirect()->route('welcome');
     }
 }

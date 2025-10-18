@@ -53,9 +53,11 @@
                 </button>
             </form>
 
-            <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-6">
-                &copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}
-            </p>
+            <div class="mt-4 text-center">
+                <a href="{{ route('register') }}" class="text-sm text-indigo-600 hover:underline">
+                    Click here to register
+                </a>
+            </div>
         </div>
     </div>
 @endsection

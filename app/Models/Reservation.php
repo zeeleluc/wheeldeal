@@ -17,11 +17,13 @@ class Reservation extends Model
         'end_date',
         'passengers',
         'total_price_cents',
+        'paid_at',
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'paid_at' => 'datetime',
     ];
 
     public function user()
@@ -37,5 +39,10 @@ class Reservation extends Model
     public function getDaysAttribute(): int
     {
         return EndDateService::calculateDuration($this->start_date, $this->end_date);
+    }
+
+    public function isPaid(): bool
+    {
+        return ! is_null($this->paid_at);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use Livewire\Component;
 use App\Models\Car;
@@ -213,18 +214,16 @@ class ReservationForm extends Component
     // ----- Booking -----
     public function book(): Redirector
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
         $this->validate([
             'start_date' => ['required', 'date', 'after_or_equal:today'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'selectedCarId' => ['required', 'exists:cars,id'],
         ]);
 
+        $userId = Auth::id();
+
         $reservation = Reservation::create([
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'car_id' => $this->selectedCarId,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
@@ -232,10 +231,13 @@ class ReservationForm extends Component
             'total_price_cents' => $this->quoteCents,
         ]);
 
-        session()->flash('success', 'Reservation completed!');
-        $this->resetForm();
+        Session::put('draft_reservation_id', $reservation->id);
 
-        return redirect()->route('reservations.show', $reservation);
+        if (!$userId) {
+            return redirect()->route('login');
+        }
+
+        return redirect()->route('payment.show', $reservation);
     }
 
     // ----- Render -----
