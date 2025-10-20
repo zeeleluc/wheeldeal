@@ -25,6 +25,12 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
+### Add your payment provider keys
+```
+SENTOO_SECRET=
+SENTOO_MERCHANT_ID=
+```
+
 ### Important for webhooks
 
 - Create a public expose URL (e.g., using Laravel Valet share or ngrok) so the payment provider can reach the webhook.
