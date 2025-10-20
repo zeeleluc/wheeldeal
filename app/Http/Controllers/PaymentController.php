@@ -49,6 +49,20 @@ class PaymentController extends Controller
 
     public function webhook(Request $request)
     {
+        $transactionId = $request->input('transaction_id');
+
+        $userAgent = $request->header('User-Agent', '');
+        if (!str_starts_with($userAgent, 'Sentoo/')) {
+            Log::warning('Webhook ignored due to invalid User-Agent', [
+                'user_agent' => $userAgent,
+                'transaction_id' => $transactionId,
+            ]);
+
+            return response()->json(['success' => true]);
+        }
+
+        // Optional, add IP check
+
         Log::info('Sentoo webhook received', [
             'headers' => $request->headers->all(),
             'body' => $request->all(),
@@ -56,6 +70,6 @@ class PaymentController extends Controller
 
         $this->sentoo->handleWebhook($request->all());
 
-        return response('success', 200);
+        return response()->json(['success' => true]);
     }
 }

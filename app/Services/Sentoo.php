@@ -57,6 +57,7 @@ class Sentoo
             Log::error('Sentoo payment creation failed', $data);
 
             return null;
+
         } catch (\Exception $e) {
             Log::error('Sentoo payment creation exception', ['exception' => $e]);
 
@@ -102,6 +103,10 @@ class Sentoo
             return;
         }
 
+        if (!in_array($payment->status, [PaymentStatus::PENDING])) {
+            return;
+        }
+
         $status = $this->fetchStatus($transactionId);
 
         if (!$status) {
@@ -110,26 +115,27 @@ class Sentoo
             return;
         }
 
-        $payment->markAs($status);
-        $reservation = $payment->reservation;
+        if ($payment->status->value !== $status->value) {
+            $payment->markAs($status);
 
-        if (PaymentStatus::SUCCESS === $status) {
-            $reservation->pay();
-        } elseif (in_array($status, [
-            PaymentStatus::ISSUED,
-            PaymentStatus::CANCELLED,
-            PaymentStatus::FAILED,
-            PaymentStatus::REJECTED,
-        ])) {
-            $reservation->setStatus(ReservationType::CANCELLED);
-        } else {
-            // Keep pending
+            $reservation = $payment->reservation;
+
+            if (PaymentStatus::SUCCESS === $status) {
+                $reservation->pay();
+            } elseif (in_array($status, [
+                PaymentStatus::ISSUED,
+                PaymentStatus::CANCELLED,
+                PaymentStatus::FAILED,
+                PaymentStatus::REJECTED,
+            ])) {
+                $reservation->setStatus(ReservationType::CANCELLED);
+            }
         }
 
         Log::info('Sentoo webhook processed', [
             'payment_id' => $payment->id,
             'status' => $status->value,
-            'reservation_id' => $reservation->id,
+            'reservation_id' => $payment->reservation_id,
         ]);
     }
 }
