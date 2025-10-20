@@ -15,15 +15,15 @@ class ReservationFactory extends Factory
 {
     protected $model = Reservation::class;
 
-    protected Car|null $car = null;
+    protected ?Car $car = null;
 
-    protected User|null $user = null;
+    protected ?User $user = null;
 
-    protected Carbon|null $startingAt = null;
+    protected ?Carbon $startingAt = null;
 
-    protected int|null $durationDays = null;
+    protected ?int $durationDays = null;
 
-    public ReservationType|null $status = null;
+    public ?ReservationType $status = null;
 
     public function definition(): array
     {
@@ -46,11 +46,12 @@ class ReservationFactory extends Factory
                 ->subSeconds(rand(1, 50)),
         ];
     }
-    
+
     public function forCar(Car $car): self
     {
         $factory = clone $this;
         $factory->car = $car;
+
         return $factory;
     }
 
@@ -58,6 +59,7 @@ class ReservationFactory extends Factory
     {
         $factory = clone $this;
         $factory->user = $user;
+
         return $factory;
     }
 
@@ -65,6 +67,7 @@ class ReservationFactory extends Factory
     {
         $factory = clone $this;
         $factory->startingAt = $date;
+
         return $factory;
     }
 
@@ -72,13 +75,16 @@ class ReservationFactory extends Factory
     {
         $factory = clone $this;
         $factory->durationDays = $days;
+
         return $factory;
     }
 
-    public function status(ReservationType $status): self
+    public function status(?ReservationType $status = null): self
     {
         $factory = clone $this;
-        $factory->status = $status;
+        if ($status) {
+            $factory->status = $status;
+        }
         return $factory;
     }
 }

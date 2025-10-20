@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Enums\ReservationType;
 use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -105,5 +106,22 @@ class ReservationTest extends TestCase
         $reservation->save();
 
         $this->assertFalse($user->hasRecentReservation());
+    }
+
+    public function testCancelledReservationDoesNotBlockAvailability()
+    {
+        $car = $this->createCar();
+
+        $this->createReservation([
+            'car' => $car,
+            'start_date' => Carbon::parse('2025-09-01'),
+            'duration' => 5,
+            'status' => ReservationType::CANCELLED,
+        ]);
+
+        $this->assertTrue($car->isAvailableForPeriod(
+            Carbon::parse('2025-09-01'),
+            Carbon::parse('2025-09-05')
+        ));
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\CarType;
+use App\Enums\ReservationType;
 use App\Utils\DutchLicensePlatePatterns;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,6 +49,7 @@ class Car extends Model
     public function isAvailableForPeriod(Carbon $start, Carbon $end): bool
     {
         return !$this->reservations()
+            ->where('status', '!=', ReservationType::CANCELLED->value)
             ->where(function ($query) use ($start, $end) {
                 $query->whereBetween('start_date', [$start, $end])
                     ->orWhereBetween('end_date', [$start, $end])

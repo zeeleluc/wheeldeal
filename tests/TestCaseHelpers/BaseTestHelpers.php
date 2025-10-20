@@ -29,11 +29,8 @@ trait BaseTestHelpers
             ->forCar($car)
             ->forUser($user)
             ->startingAt($start)
-            ->duration($duration);
-
-        if ($status) {
-            $factory->status($status);
-        }
+            ->duration($duration)
+            ->status($status);
 
         return $factory->create();
     }
