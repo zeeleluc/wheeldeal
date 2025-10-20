@@ -23,7 +23,7 @@
             </div>
             <div class="flex items-center justify-between">
                 <span class="font-medium">Total:</span>
-                <span class="font-bold">${{ number_format($reservation->total_price_cents / 100, 2) }}</span>
+                <span class="font-bold">XCG {{ number_format($reservation->total_price_cents / 100, 2) }}</span>
             </div>
             <div class="flex items-center justify-between">
                 <span class="font-medium">Status:</span>
