@@ -1,21 +1,40 @@
 ## 🚀 Setup
 
+### Installation
 ```
-git clone zeeleluc/wheeldeal
+git clone https://github.com/zeeleluc/wheeldeal.git
 cd wheeldeal
 composer install
 npm install
 npm run build
 ```
 
-Configure environment:
+### Configure environment
 ```
 cp .env.example .env
 php artisan key:generate
 ```
-Then update .env with your database settings.
 
-Run database migrations and seed data:
+### Update .env with database settings
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=wheeldeal
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### Important for webhooks
+
+- Create a public expose URL (e.g., using Laravel Valet share or ngrok) so the payment provider can reach the webhook.
+- Then update APP_URL in your .env file to match this expose URL. For example:
+```text
+APP_URL=https://abc123.ngrok.io
+```
+This allows the payment provider webhook to reach the correct endpoint and test your local environment. The exact method for creating the expose URL can be chosen by the user.
+
+### Database migration and seeder
 ```
 php artisan migrate
 php artisan db:seed
