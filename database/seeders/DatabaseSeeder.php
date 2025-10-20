@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Car;
+use App\Models\Payment;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,6 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
+        Payment::truncate();
         Reservation::truncate();
         Car::truncate();
         User::truncate();
@@ -27,6 +29,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             CarSeeder::class,
             ReservationSeeder::class,
+            PaymentSeeder::class,
         ]);
     }
 }

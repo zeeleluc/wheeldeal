@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentStatus;
 use App\Enums\ReservationType;
 use App\Services\EndDateService;
 use Carbon\Carbon;
@@ -40,6 +41,36 @@ class Reservation extends Model
         return $this->belongsTo(Car::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function latestPayment(): ?Payment
+    {
+        return $this->payments()->latest()->first();
+    }
+
+    public function paymentByTransactionId(string $transactionId): ?Payment
+    {
+        return $this->payments()->where('transaction_id', $transactionId)->first();
+    }
+
+    public function hasSuccessfulPayment(): bool
+    {
+        return $this->payments()->where('status', PaymentStatus::SUCCESS)->exists();
+    }
+
+    public function hasPendingPayment(): bool
+    {
+        return $this->payments()->where('status', PaymentStatus::PENDING)->exists();
+    }
+
+    public function successfulPayments()
+    {
+        return $this->payments()->where('status', PaymentStatus::SUCCESS)->get();
+    }
+
     public function getDaysAttribute(): int
     {
         return EndDateService::calculateDuration($this->start_date, $this->end_date);
@@ -76,7 +107,15 @@ class Reservation extends Model
 
     public function isPendingPayment(): bool
     {
-        return ReservationType::PENDING_PAYMENT === $this->status;
+        if ($this->status !== ReservationType::PENDING_PAYMENT) {
+            return false;
+        }
+
+        if ($this->payments()->where('status', PaymentStatus::PENDING)->exists()) {
+            return false;
+        }
+
+        return true;
     }
 
     public function isDraft(): bool

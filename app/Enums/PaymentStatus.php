@@ -48,9 +48,9 @@ enum PaymentStatus: string
     public function message(): string
     {
         return match($this) {
-            self::SUCCESS => 'Your payment was successful. Thank you!',
-            self::PENDING => 'Your payment is pending. Please wait for confirmation.',
-            self::REJECTED, self::FAILED => 'Your payment could not be processed. Please try again.',
+            self::SUCCESS => 'Your payment was successful.',
+            self::PENDING => 'Your payment is pending.',
+            self::REJECTED, self::FAILED => 'Your payment could not be processed.',
             self::ISSUED => 'Your payment has been issued successfully.',
             self::CANCELLED => 'Your payment was cancelled.',
         };

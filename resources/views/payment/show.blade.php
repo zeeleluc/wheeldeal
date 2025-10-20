@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg">
+    <div class="w-full max-w-xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg">
         <h2 class="text-3xl font-semibold mb-6 text-center">Payment Details</h2>
 
         <div class="space-y-4">
@@ -46,13 +46,11 @@
         </div>
 
         @can('pay', $reservation)
-            <form method="POST" action="{{ route('payment.pay', $reservation) }}" class="mt-6">
-                @csrf
-                <button type="submit"
-                        class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg shadow-md transition-all">
-                    Mark as Paid
-                </button>
-            </form>
+            <livewire:pay-button
+                :reservation="$reservation"
+                currency="XCG"
+                description="Reservation #{{ $reservation->id }}"
+            />
         @endcan
 
     </div>

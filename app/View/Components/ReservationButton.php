@@ -4,6 +4,8 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use App\Models\Reservation;
 
 class ReservationButton extends Component
 {
@@ -18,7 +20,7 @@ class ReservationButton extends Component
 
         $user = Auth::user();
 
-        $this->disabled = $user ? $user->hasRecentReservation() : false;
+        $this->disabled = $user && !Gate::allows('create', [Reservation::class, $user]);
     }
 
     public function render()

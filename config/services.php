@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'sentoo' => [
+        'secret' => env('SENTOO_SECRET'),
+        'merchant_id' => env('SENTOO_MERCHANT_ID'),
+        'return_url' => env('SENTOO_RETURN_URL'),
+        'api_url' => env('SENTOO_API_URL'),
+    ],
 ];

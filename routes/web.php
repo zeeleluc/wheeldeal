@@ -18,6 +18,7 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/reservation', [ReservationController::class, 'create'])->name('reservation.create');
+Route::post('/payment/status', [PaymentController::class, 'webhook'])->name('payment.webhook');
 
 Route::middleware(['auth'])->group(function () {
 

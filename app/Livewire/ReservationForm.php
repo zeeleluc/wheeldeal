@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Enums\ReservationType;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
@@ -231,13 +232,14 @@ class ReservationForm extends Component
             'total_price_cents' => $this->quoteCents,
         ]);
 
-        if (!$userId) {
-            Session::put('draft_reservation_id', $reservation->id);
-
-            return redirect()->route('login');
+        if ($userId) {
+            $reservation->setStatus(ReservationType::PENDING_PAYMENT);
+            return redirect()->route('payment.show', $reservation);
         }
 
-        return redirect()->route('payment.show', $reservation);
+
+        Session::put('draft_reservation_id', $reservation->id);
+        return redirect()->route('login');
     }
 
     // ----- Render -----

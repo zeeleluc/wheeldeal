@@ -19,8 +19,8 @@
             <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             @foreach($reservations as $reservation)
                 <tr class="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $reservation->car->name }}</td>
-                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100 flex items-center space-x-2">
+                    <td class="px-4 py-2">{{ $reservation->car->name }}</td>
+                    <td class="px-4 py-2 flex items-center space-x-2">
                         @switch($reservation->status)
                             @case(\App\Enums\ReservationType::DRAFT)
                                 <span class="w-4 h-4 bg-gray-400 rounded-full"></span>
@@ -43,24 +43,42 @@
                                 @break
                         @endswitch
                     </td>
-                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $reservation->start_date->format('d-m-Y') }}</td>
-                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $reservation->end_date->format('d-m-Y') }}</td>
-                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100 text-right">{{ $reservation->passengers }}</td>
-                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100 text-right">${{ number_format($reservation->total_price_cents / 100, 2) }}</td>
+                    <td class="px-4 py-2">{{ $reservation->start_date->format('d-m-Y') }}</td>
+                    <td class="px-4 py-2">{{ $reservation->end_date->format('d-m-Y') }}</td>
+                    <td class="px-4 py-2 text-right">{{ $reservation->passengers }}</td>
+                    <td class="px-4 py-2 text-right">${{ number_format($reservation->total_price_cents / 100, 2) }}</td>
                     <td class="px-4 py-2 text-right">
                         @can('pay', $reservation)
                             <a href="{{ route('payment.show', $reservation) }}"
-                               class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                                {{ __('Pay') }}
+                               class="px-3 py-1 bg-blue-600 text-xs hover:bg-blue-700 text-white rounded-lg">
+                                Pay
                             </a>
                         @else
                             <a href="{{ route('reservations.show', $reservation) }}"
-                               class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                                {{ __('View') }}
+                               class="px-3 py-1 bg-gray-400 text-xs hover:bg-gray-500 text-white rounded-lg">
+                                View
                             </a>
                         @endcan
                     </td>
                 </tr>
+
+                @if($reservation->payments->isNotEmpty() && !$reservation->hasSuccessfulPayment() && !$reservation->hasPendingPayment())
+                    <tr class="bg-gray-50 dark:bg-gray-900">
+                        <td></td>
+                        <td colspan="6" class="pl-8 pr-4 py-2">
+                            <div class="space-y-2">
+                                @foreach($reservation->payments as $payment)
+                                    <div class="flex items-center space-x-4">
+                                        <span class="w-3 h-3 rounded-full {{ $payment->status->circleClass() }}"></span>
+                                        <span class="font-medium">{{ ucfirst($payment->status->value) }}</span>
+                                        <span class="text-gray-600 dark:text-gray-400">{{ $payment->identification }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </td>
+                    </tr>
+                @endif
+
             @endforeach
             </tbody>
         </table>
