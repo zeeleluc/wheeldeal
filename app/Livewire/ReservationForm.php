@@ -142,12 +142,12 @@ class ReservationForm extends Component
 
         $cars = Car::where('capacity', '>=', $this->passengers)
             ->get()
-            ->filter(fn($car) => $car->isAvailableForPeriod($start, $end))
+            ->filter(fn ($car) => $car->isAvailableForPeriod($start, $end))
             ->sortBy('base_price_cents')
             ->take(5)
             ->values();
 
-        $this->availableCars = $cars->map(fn($car) => [
+        $this->availableCars = $cars->map(fn ($car) => [
             'id' => $car->id,
             'name' => $car->name,
             'license_plate' => $car->formatted_license_plate,
@@ -194,7 +194,7 @@ class ReservationForm extends Component
 
             $availableCars = Car::where('capacity', '>=', $this->passengers)
                 ->get()
-                ->filter(fn($car) => $car->isAvailableForPeriod($newStart, $newEnd))
+                ->filter(fn ($car) => $car->isAvailableForPeriod($newStart, $newEnd))
                 ->values();
 
             if ($availableCars->isNotEmpty()) {

@@ -23,6 +23,10 @@ class ReservationPolicy
             return true;
         }
 
+        if ($user->isAdmin()) {
+            return true;
+        }
+
         return !$user->hasRecentReservation();
     }
 

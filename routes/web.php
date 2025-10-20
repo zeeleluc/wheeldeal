@@ -8,28 +8,49 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
+Route::view('/', 'welcome')->name('welcome');
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/register', 'showRegister')->name('register');
+    Route::post('/register', 'register');
+    Route::get('/login', 'showLogin')->name('login');
+    Route::post('/login', 'login');
+    Route::post('/logout', 'logout')->name('logout');
+});
+
 Route::get('/reservation', [ReservationController::class, 'create'])->name('reservation.create');
 Route::post('/payment/status', [PaymentController::class, 'webhook'])->name('payment.webhook');
 
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth'])->group(function () {
 
-    Route::middleware(['admin'])->group(function () {
+    // Admin Routes
+    Route::middleware(['admin'])->prefix('admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/admin/cars', [AdminCarsController::class, 'index'])->name('admin.cars');
+        Route::get('/cars', [AdminCarsController::class, 'index'])->name('admin.cars');
     });
 
-    Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
-    Route::get('/payment/{reservation}', [PaymentController::class, 'show'])->name('payment.show');
-    Route::post('/payment/{reservation}', [PaymentController::class, 'pay'])->name('payment.pay');
-    Route::get('/payment/status/{status}', [PaymentController::class, 'status'])->name('payment.status');
+    // User / Reservation Routes
+    Route::prefix('reservations')->group(function () {
+        Route::get('/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
+    });
+
+    // Payment Routes
+    Route::prefix('payment')->group(function () {
+        Route::get('/{reservation}', [PaymentController::class, 'show'])->name('payment.show');
+        Route::post('/{reservation}', [PaymentController::class, 'pay'])->name('payment.pay');
+        Route::get('/status/{status}', [PaymentController::class, 'status'])->name('payment.status');
+    });
+
+    // User Routes
     Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
 });

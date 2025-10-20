@@ -4,32 +4,29 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Reservation;
+use App\Enums\ReservationType;
 use Carbon\Carbon;
 
 class CleanDraftReservations extends Command
 {
-    /**
-     * The name and signature of the console command.
-     */
     protected $signature = 'reservations:clean-drafts';
+    protected $description = 'Delete old draft reservations or pending payments';
 
-    /**
-     * The console command description.
-     */
-    protected $description = 'Delete draft reservations (user_id is null) older than 10 minutes';
-
-    /**
-     * Execute the console command.
-     */
     public function handle(): bool
     {
-        $threshold = Carbon::now()->subMinutes(10);
+        $draftThreshold = Carbon::now()->subMinutes(config('car.expiration.draft_minutes'));
+        $pendingPaymentThreshold = Carbon::now()->subMinutes(config('car.expiration.pending_payment_minutes'));
 
-        $deleted = Reservation::whereNull('user_id')
-            ->where('created_at', '<', $threshold)
+        $deletedDrafts = Reservation::whereNull('user_id')
+            ->where('created_at', '<', $draftThreshold)
             ->delete();
 
-        $this->info("Deleted {$deleted} draft reservation(s).");
+        $deletedPending = Reservation::where('status', ReservationType::PENDING_PAYMENT)
+            ->where('created_at', '<', $pendingPaymentThreshold)
+            ->delete();
+
+        $this->info("Deleted {$deletedDrafts} draft reservation(s).");
+        $this->info("Deleted {$deletedPending} pending payment reservation(s).");
 
         return true;
     }
