@@ -24,7 +24,7 @@ class Sentoo
 
     public function createPayment(Reservation $reservation, string $currency, string $description): ?array
     {
-        $returnUrl = rtrim(config('app.url'), '/') . '/' . ltrim(config('services.sentoo.return_url'), '/');
+        $returnUrl = rtrim(config('app.url'), '/').'/'.ltrim(config('services.sentoo.return_url'), '/');
 
         try {
             $response = Http::asForm()
@@ -55,9 +55,11 @@ class Sentoo
             }
 
             Log::error('Sentoo payment creation failed', $data);
+
             return null;
         } catch (\Exception $e) {
             Log::error('Sentoo payment creation exception', ['exception' => $e]);
+
             return null;
         }
     }
@@ -88,6 +90,7 @@ class Sentoo
 
         if (! $transactionId) {
             Log::warning('Webhook missing transaction_id', $payload);
+
             return;
         }
 
@@ -95,6 +98,7 @@ class Sentoo
 
         if (! $payment) {
             Log::warning('Webhook for unknown payment', ['transaction_id' => $transactionId]);
+
             return;
         }
 
@@ -102,13 +106,14 @@ class Sentoo
 
         if (! $status) {
             Log::warning('Unable to resolve payment status', ['transaction_id' => $transactionId]);
+
             return;
         }
 
         $payment->markAs($status);
         $reservation = $payment->reservation;
 
-        if ($status === PaymentStatus::SUCCESS) {
+        if (PaymentStatus::SUCCESS === $status) {
             $reservation->pay();
         } elseif (in_array($status, [
             PaymentStatus::ISSUED,

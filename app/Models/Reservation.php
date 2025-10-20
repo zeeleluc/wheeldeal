@@ -107,7 +107,7 @@ class Reservation extends Model
 
     public function isPendingPayment(): bool
     {
-        if ($this->status !== ReservationType::PENDING_PAYMENT) {
+        if (ReservationType::PENDING_PAYMENT !== $this->status) {
             return false;
         }
 

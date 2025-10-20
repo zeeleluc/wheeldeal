@@ -234,11 +234,13 @@ class ReservationForm extends Component
 
         if ($userId) {
             $reservation->setStatus(ReservationType::PENDING_PAYMENT);
+
             return redirect()->route('payment.show', $reservation);
         }
 
 
         Session::put('draft_reservation_id', $reservation->id);
+
         return redirect()->route('login');
     }
 

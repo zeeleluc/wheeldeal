@@ -6,6 +6,7 @@ use App\Enums\CarType;
 use App\Livewire\Modal;
 use App\Models\Car;
 use App\Rules\DutchLicensePlate;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class CarModal extends Modal
@@ -15,7 +16,8 @@ class CarModal extends Modal
     public string $license_plate = '';
     public string $type = '';
     public int $capacity = 1;
-    public int $base_price_cents = 0;
+    public int $amount;
+    public int $cents;
     public ?string $apk_expiry = null;
 
     protected $listeners = ['openModal' => 'handleOpenModal'];
@@ -30,7 +32,8 @@ class CarModal extends Modal
             $this->license_plate = $car->license_plate;
             $this->type = $car->type->value;
             $this->capacity = $car->capacity;
-            $this->base_price_cents = $car->base_price_cents;
+            $this->amount = floor($car->base_price_cents / 100);
+            $this->cents = str_pad($car->base_price_cents % 100, 2, '0', STR_PAD_LEFT);
             $this->apk_expiry = $car->apk_expiry->format('Y-m-d');
         } else {
             $this->resetInputFields();
@@ -46,7 +49,11 @@ class CarModal extends Modal
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'license_plate' => ['required', 'unique:cars,license_plate', new DutchLicensePlate()],
+            'license_plate' => [
+                'required',
+                new DutchLicensePlate(),
+                Rule::unique('cars', 'license_plate')->ignore($this->carId),
+            ],
             'type' => [
                 'required',
                 'string',
@@ -56,8 +63,9 @@ class CarModal extends Modal
                     }
                 },
             ],
-            'capacity' => ['required', 'integer', 'min:1'],
-            'base_price_cents' => ['required', 'integer', 'min:0'],
+            'capacity' => ['required', 'integer', 'min:1', 'max:7'],
+            'amount' => ['required', 'integer', 'min:0'],
+            'cents' => ['nullable', 'integer', 'min:0', 'max:99'],
             'apk_expiry' => [
                 'required',
                 'date',
@@ -79,7 +87,7 @@ class CarModal extends Modal
 
     protected function resetInputFields(): void
     {
-        $this->reset(['carId', 'name', 'license_plate', 'type', 'capacity', 'base_price_cents', 'apk_expiry']);
+        $this->reset(['carId', 'name', 'license_plate', 'type', 'capacity', 'amount', 'cents', 'apk_expiry']);
     }
 
     public function openForCreate(): void
@@ -88,23 +96,12 @@ class CarModal extends Modal
         $this->openModal();
     }
 
-    public function openForEdit(Car $car): void
-    {
-        $this->carId = $car->id;
-        $this->name = $car->name;
-        $this->license_plate = $car->license_plate; // stored without dashes
-        $this->type = $car->type->value ?? $car->type;
-        $this->capacity = $car->capacity;
-        $this->base_price_cents = $car->base_price_cents;
-        $this->apk_expiry = $car->apk_expiry->format('Y-m-d');
-
-        $this->openModal();
-    }
-
     public function saveCar(): void
     {
         $this->license_plate = str_replace('-', '', strtoupper($this->license_plate));
         $this->validate();
+
+        $totalCents = ((int) $this->amount) * 100 + ((int) $this->cents);
 
         if ($this->carId) {
             Car::findOrFail($this->carId)->update([
@@ -112,7 +109,7 @@ class CarModal extends Modal
                 'license_plate' => $this->license_plate,
                 'type' => $this->type,
                 'capacity' => $this->capacity,
-                'base_price_cents' => $this->base_price_cents,
+                'base_price_cents' => $totalCents,
                 'apk_expiry' => $this->apk_expiry,
             ]);
 
@@ -123,7 +120,7 @@ class CarModal extends Modal
                 'license_plate' => $this->license_plate,
                 'type' => $this->type,
                 'capacity' => $this->capacity,
-                'base_price_cents' => $this->base_price_cents,
+                'base_price_cents' => $totalCents,
                 'apk_expiry' => $this->apk_expiry,
             ]);
 

@@ -21,6 +21,7 @@ class PayButton extends Component
 
         if (! Gate::allows('pay', $this->reservation)) {
             $this->error = __('You are not authorized to pay for this reservation.');
+
             return;
         }
 
@@ -34,7 +35,8 @@ class PayButton extends Component
             );
 
             if ($result && isset($result['url'])) {
-                $this->js('window.location.href = "' . addslashes($result['url']) . '"');
+                $this->js('window.location.href = "'.addslashes($result['url']).'"');
+
                 return;
             }
 

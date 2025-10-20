@@ -6,13 +6,10 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Styles / Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <!-- Livewire Styles -->
     @livewireStyles
 </head>
-<body class="antialiased min-h-screen flex flex-col">
+<body class="antialiased flex flex-col min-h-screen">
 
 <!-- Global Header -->
 <header class="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -22,20 +19,17 @@
         </a>
 
         <div class="flex items-center space-x-3">
-
-            {{-- Guest Menu --}}
             @guest
                 <a href="{{ route('login') }}"
-                   class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
-                    Login
+                   class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+                    {{ __('Login') }}
                 </a>
                 <a href="{{ route('register') }}"
-                   class="px-4 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-800 transition-colors">
-                    Register
+                   class="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors">
+                    {{ __('Register') }}
                 </a>
             @endguest
 
-            {{-- Authenticated Menu --}}
             @auth
                 <a href="{{ route('user.show', auth()->user()) }}">
                     <div class="flex items-center space-x-3 bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-xl shadow-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition">
@@ -47,8 +41,8 @@
 
                 @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.cars') }}"
-                       class="px-3 py-1.5 text-sm font-medium text-indigo-600 bg-white dark:bg-gray-700 border border-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all">
-                        Fleet
+                       class="px-3 py-1.5 text-sm font-medium text-blue-600 bg-white dark:bg-gray-700 border border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all">
+                        {{ __('Fleet') }}
                     </a>
                 @endif
 
@@ -56,13 +50,11 @@
                     @csrf
                     <button type="submit"
                             class="px-3 py-1.5 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors">
-                        Logout
+                        {{ __('Logout') }}
                     </button>
                 </form>
             @endauth
-
         </div>
-
     </div>
 </header>
 
@@ -70,14 +62,15 @@
 <livewire:draft-reservation-bar />
 
 <!-- Main Content -->
-@yield('content')
+<main class="flex-grow">
+    @yield('content')
+</main>
 
 <!-- Footer -->
-<footer class="p-4 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600">
-    &copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. All rights reserved.
+<footer class="p-4 bg-blue-600 text-white text-center text-sm">
+    &copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. {{ __('All rights reserved.') }}
 </footer>
 
-<!-- Livewire Scripts -->
 @livewireScripts
 </body>
 </html>

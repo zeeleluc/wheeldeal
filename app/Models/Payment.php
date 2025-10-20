@@ -61,6 +61,6 @@ class Payment extends Model
 
     public function isSuccessful(): bool
     {
-        return $this->status === PaymentStatus::SUCCESS;
+        return PaymentStatus::SUCCESS === $this->status;
     }
 }

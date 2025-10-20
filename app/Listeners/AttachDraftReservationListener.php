@@ -18,6 +18,7 @@ class AttachDraftReservationListener
 
         if (! $draft) {
             Log::error("Draft reservation with ID {$event->draftId} not found.");
+
             return;
         }
 

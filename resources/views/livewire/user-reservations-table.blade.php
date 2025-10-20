@@ -1,62 +1,67 @@
 <div>
-    <div class="flex items-center justify-between mb-4">
-        <h1 class="text-2xl font-bold">{{ __('Your Wheel Deals') }}</h1>
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ __('Your Wheel Deals') }}</h1>
         <x-reservation-button title="{{ __('New Reservation') }}" />
     </div>
-    <div class="overflow-x-auto mt-6">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-50 dark:bg-gray-800">
             <tr>
-                <th class="px-4 py-3 text-left text-gray-700 dark:text-gray-300">Car</th>
-                <th class="px-4 py-3 text-left text-gray-700 dark:text-gray-300">Status</th>
-                <th class="px-4 py-3 text-left text-gray-700 dark:text-gray-300">Start Date</th>
-                <th class="px-4 py-3 text-left text-gray-700 dark:text-gray-300">End Date</th>
-                <th class="px-4 py-3 text-left text-gray-700 dark:text-gray-300 text-right">Passengers</th>
-                <th class="px-4 py-3 text-left text-gray-700 dark:text-gray-300 text-right">Total Price</th>
+                <th class="px-4 py-3 text-left text-gray-700 dark:text-gray-300 min-w-[180px]">{{ __('Car') }}</th>
+                <th class="px-4 py-3 text-left text-gray-700 dark:text-gray-300">{{ __('Status') }}</th>
+                <th class="px-4 py-3 text-left text-gray-700 dark:text-gray-300 min-w-[130px]">{{ __('Start Date') }}</th>
+                <th class="px-4 py-3 text-left text-gray-700 dark:text-gray-300 min-w-[130px]">{{ __('End Date') }}</th>
+                <th class="px-4 py-3 text-right text-gray-700 dark:text-gray-300">{{ __('Passengers') }}</th>
+                <th class="px-4 py-3 text-right text-gray-700 dark:text-gray-300 min-w-[180px]">{{ __('Total Price') }}</th>
                 <th class="px-4 py-3 text-right text-gray-700 dark:text-gray-300"></th>
             </tr>
             </thead>
+
             <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             @foreach($reservations as $reservation)
                 <tr class="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                    <td class="px-4 py-2">{{ $reservation->car->name }}</td>
-                    <td class="px-4 py-2 flex items-center space-x-2">
+                    <td class="px-4 py-3 text-gray-800 dark:text-gray-100">{{ $reservation->car->name }}</td>
+
+                    <td class="px-4 py-3 flex items-center space-x-2">
                         @switch($reservation->status)
                             @case(\App\Enums\ReservationType::DRAFT)
                                 <span class="w-4 h-4 bg-gray-400 rounded-full"></span>
-                                <span class="text-gray-600 font-semibold">Draft</span>
+                                <span class="text-gray-600 font-semibold">{{ __('Draft') }}</span>
                                 @break
 
                             @case(\App\Enums\ReservationType::PENDING_PAYMENT)
                                 <span class="w-4 h-4 border-4 border-orange-400 border-t-orange-600 rounded-full animate-spin"></span>
-                                <span class="text-orange-600 font-semibold">Pending Payment</span>
+                                <span class="text-orange-600 font-semibold">{{ __('Pending Payment') }}</span>
                                 @break
 
                             @case(\App\Enums\ReservationType::PAID)
                                 <span class="w-4 h-4 bg-green-500 rounded-full"></span>
-                                <span class="text-green-600 font-semibold">Paid</span>
+                                <span class="text-green-600 font-semibold">{{ __('Paid') }}</span>
                                 @break
 
                             @case(\App\Enums\ReservationType::CANCELLED)
                                 <span class="w-4 h-4 bg-red-500 rounded-full"></span>
-                                <span class="text-red-600 font-semibold">Cancelled</span>
+                                <span class="text-red-600 font-semibold">{{ __('Cancelled') }}</span>
                                 @break
                         @endswitch
                     </td>
-                    <td class="px-4 py-2">{{ $reservation->start_date->format('d-m-Y') }}</td>
-                    <td class="px-4 py-2">{{ $reservation->end_date->format('d-m-Y') }}</td>
-                    <td class="px-4 py-2 text-right">{{ $reservation->passengers }}</td>
-                    <td class="px-4 py-2 text-right">${{ number_format($reservation->total_price_cents / 100, 2) }}</td>
-                    <td class="px-4 py-2 text-right">
+
+                    <td class="px-4 py-3">{{ $reservation->start_date->format('d-m-Y') }}</td>
+                    <td class="px-4 py-3">{{ $reservation->end_date->format('d-m-Y') }}</td>
+                    <td class="px-4 py-3 text-right">{{ $reservation->passengers }}</td>
+                    <td class="px-4 py-3 text-right">XCG {{ number_format($reservation->total_price_cents / 100, 2) }}</td>
+
+                    <td class="px-4 py-3 text-right space-x-2">
                         @can('pay', $reservation)
                             <a href="{{ route('payment.show', $reservation) }}"
-                               class="px-3 py-1 bg-blue-600 text-xs hover:bg-blue-700 text-white rounded-lg">
-                                Pay
+                               class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all">
+                                {{ __('Pay') }}
                             </a>
                         @else
                             <a href="{{ route('reservations.show', $reservation) }}"
-                               class="px-3 py-1 bg-gray-400 text-xs hover:bg-gray-500 text-white rounded-lg">
-                                View
+                               class="px-3 py-1 bg-gray-400 hover:bg-gray-500 text-white text-xs font-semibold rounded-lg shadow-sm transition-all">
+                                {{ __('View') }}
                             </a>
                         @endcan
                     </td>
@@ -68,17 +73,16 @@
                         <td colspan="6" class="pl-8 pr-4 py-2">
                             <div class="space-y-2">
                                 @foreach($reservation->payments as $payment)
-                                    <div class="flex items-center space-x-4">
+                                    <div class="flex items-center space-x-4 text-sm text-gray-700 dark:text-gray-300">
                                         <span class="w-3 h-3 rounded-full {{ $payment->status->circleClass() }}"></span>
                                         <span class="font-medium">{{ ucfirst($payment->status->value) }}</span>
-                                        <span class="text-gray-600 dark:text-gray-400">{{ $payment->identification }}</span>
+                                        <span class="text-gray-500 dark:text-gray-400">{{ $payment->identification }}</span>
                                     </div>
                                 @endforeach
                             </div>
                         </td>
                     </tr>
                 @endif
-
             @endforeach
             </tbody>
         </table>
