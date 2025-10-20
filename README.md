@@ -57,3 +57,16 @@ Step 1: Choose rental dates and number of passengers.
 Step 2: Select a car (up to 5 cars shown, sorted by cheapest price).
 
 Step 3: Review and confirm the reservation.
+
+## Other Features (Optional / Demo Enhancements)
+
+This demo application includes the core functionality for car rental reservations. Additionally, the following features could be implemented to showcase a more complete system:
+
+- Choose specific **pickup and drop-off times**
+- Option for **one-way rentals** between different locations
+- Ability to **extend rentals** if needed
+- Support for **promo codes or loyalty discounts**
+- Selection of **extras**: GPS, child seat, insurance
+- Filter cars by **type, capacity, or transmission**
+- Email notifications
+etc..
