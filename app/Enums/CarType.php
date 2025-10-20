@@ -10,12 +10,12 @@ enum CarType: string
 
     public static function values(): array
     {
-        return array_map(fn ($case) => $case->value, self::cases());
+        return array_map(fn($case) => $case->value, self::cases());
     }
 
     public function capacity(): int
     {
-        return match($this) {
+        return match ($this) {
             self::MINIVAN => 7,
             self::SEDAN => 5,
             self::CONVERTIBLE => 2,
@@ -24,7 +24,7 @@ enum CarType: string
 
     public function title(): string
     {
-        return match($this) {
+        return match ($this) {
             self::MINIVAN => 'Minivan',
             self::SEDAN => 'Sedan',
             self::CONVERTIBLE => 'Convertible',

@@ -59,7 +59,7 @@
 </header>
 
 <!-- Draft Reservation Alert -->
-<livewire:draft-reservation-bar />
+<livewire:draft-reservation-bar/>
 
 <!-- Main Content -->
 <main class="flex-grow">

@@ -60,7 +60,8 @@
                 </div>
 
                 <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <label for="password_confirmation"
+                           class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ __('Confirm Password') }}
                     </label>
                     <input

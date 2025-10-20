@@ -12,7 +12,7 @@ class ReservationController extends Controller
     {
         $user = Auth::user();
 
-        if (! Gate::check('create', new Reservation())) {
+        if (!Gate::check('create', new Reservation())) {
             if ($user) {
                 return redirect()->route('user.show', $user);
             }

@@ -19,7 +19,7 @@ class PayButton extends Component
     {
         $this->reset(['error']);
 
-        if (! Gate::allows('pay', $this->reservation)) {
+        if (!Gate::allows('pay', $this->reservation)) {
             $this->error = __('You are not authorized to pay for this reservation.');
 
             return;

@@ -17,7 +17,7 @@ class PaymentSeeder extends Seeder
         foreach ($reservations as $reservation) {
             Payment::create([
                 'reservation_id' => $reservation->id,
-                'identification' => 'seeded-' . Str::uuid(),
+                'identification' => 'seeded-'.Str::uuid(),
                 'status' => PaymentStatus::SUCCESS,
             ]);
         }

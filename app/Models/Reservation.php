@@ -96,7 +96,7 @@ class Reservation extends Model
 
     public function isPaid(): bool
     {
-        return ! is_null($this->paid_at);
+        return !is_null($this->paid_at);
     }
 
     public function isActive(): bool

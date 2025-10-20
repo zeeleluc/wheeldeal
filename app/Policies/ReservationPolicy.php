@@ -23,7 +23,7 @@ class ReservationPolicy
             return true;
         }
 
-        return ! $user->hasRecentReservation();
+        return !$user->hasRecentReservation();
     }
 
     public function update(User $user, Reservation $reservation): bool

@@ -25,7 +25,8 @@
                     <td class="px-4 py-3 text-gray-900 dark:text-gray-100 font-mono">{{ $car->formatted_license_plate }}</td>
                     <td class="px-4 py-3 text-gray-900 dark:text-gray-100">{{ $car->type->title() }}</td>
                     <td class="px-4 py-3 text-right text-gray-900 dark:text-gray-100">{{ $car->capacity }}</td>
-                    <td class="px-4 py-3 text-right text-gray-900 dark:text-gray-100">XCG {{ number_format($car->base_price_cents / 100, 2) }}</td>
+                    <td class="px-4 py-3 text-right text-gray-900 dark:text-gray-100">
+                        XCG {{ number_format($car->base_price_cents / 100, 2) }}</td>
                     <td class="px-4 py-3 text-right text-gray-900 dark:text-gray-100">{{ $car->apk_expiry->format('d-m-Y') }}</td>
                     <td class="px-2 py-3 text-right">
                         <button wire:click="openModal({{ $car->id }})"

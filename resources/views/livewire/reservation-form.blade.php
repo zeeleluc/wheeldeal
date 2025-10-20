@@ -39,14 +39,14 @@
                             type="date"
                             wire:model.live="start_date"
                             min="{{ now()->toDateString() }}"
-                            class="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+                            class="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-blue-600 focus:outline-none"/>
 
                     <input
                             type="date"
                             wire:model="end_date"
                             min="{{ $start_date ?? now()->toDateString() }}"
                             max="{{ $end_date_max ?? now()->addDays(config('car.rental.max_days'))->toDateString() }}"
-                            class="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+                            class="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-blue-600 focus:outline-none"/>
 
                     <button wire:click="nextStep"
                             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg transition-all mt-4">

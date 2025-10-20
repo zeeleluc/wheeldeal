@@ -13,7 +13,7 @@ enum PaymentStatus: string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::SUCCESS => 'Success',
             self::PENDING => 'Pending',
             self::REJECTED => 'Rejected',
@@ -25,7 +25,7 @@ enum PaymentStatus: string
 
     public function color(): string
     {
-        return match($this) {
+        return match ($this) {
             self::SUCCESS => 'green',
             self::PENDING => 'orange',
             self::REJECTED, self::FAILED => 'red',
@@ -36,7 +36,7 @@ enum PaymentStatus: string
 
     public function circleClass(): string
     {
-        return match($this) {
+        return match ($this) {
             self::SUCCESS => 'bg-green-500',
             self::PENDING => 'border-4 border-orange-400 border-t-orange-600 animate-spin rounded-full',
             self::REJECTED, self::FAILED => 'bg-red-500',
@@ -47,7 +47,7 @@ enum PaymentStatus: string
 
     public function message(): string
     {
-        return match($this) {
+        return match ($this) {
             self::SUCCESS => 'Your payment was successful.',
             self::PENDING => 'Your payment is pending.',
             self::REJECTED, self::FAILED => 'Your payment could not be processed.',

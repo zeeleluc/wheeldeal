@@ -47,9 +47,9 @@
 
         @can('pay', $reservation)
             <livewire:pay-button
-                :reservation="$reservation"
-                currency="XCG"
-                description="Reservation #{{ $reservation->id }}"
+                    :reservation="$reservation"
+                    currency="XCG"
+                    description="Reservation #{{ $reservation->id }}"
             />
         @endcan
 

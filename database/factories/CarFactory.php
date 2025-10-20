@@ -15,14 +15,14 @@ class CarFactory extends Factory
         $type = $this->faker->randomElement(CarType::values());
         $carTypeEnum = CarType::from($type);
 
-        $basePriceCents = match($carTypeEnum) {
+        $basePriceCents = match ($carTypeEnum) {
             CarType::CONVERTIBLE => $this->faker->numberBetween(3000, 4000),
             CarType::SEDAN => $this->faker->numberBetween(5000, 6000),
             CarType::MINIVAN => $this->faker->numberBetween(7000, 8000),
         };
 
         return [
-            'name' => ucfirst($type) . ' ' . $this->faker->unique()->numerify('###'),
+            'name' => ucfirst($type).' '.$this->faker->unique()->numerify('###'),
             'type' => $carTypeEnum->value,
             'license_plate' => strtoupper($this->faker->unique()->bothify('??###??')),
             'capacity' => $carTypeEnum->capacity(),

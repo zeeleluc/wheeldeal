@@ -88,7 +88,7 @@ class Sentoo
     {
         $transactionId = $payload['transaction_id'] ?? null;
 
-        if (! $transactionId) {
+        if (!$transactionId) {
             Log::warning('Webhook missing transaction_id', $payload);
 
             return;
@@ -96,7 +96,7 @@ class Sentoo
 
         $payment = Payment::where('identification', $transactionId)->first();
 
-        if (! $payment) {
+        if (!$payment) {
             Log::warning('Webhook for unknown payment', ['transaction_id' => $transactionId]);
 
             return;
@@ -104,7 +104,7 @@ class Sentoo
 
         $status = $this->fetchStatus($transactionId);
 
-        if (! $status) {
+        if (!$status) {
             Log::warning('Unable to resolve payment status', ['transaction_id' => $transactionId]);
 
             return;

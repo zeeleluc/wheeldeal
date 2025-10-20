@@ -1,7 +1,7 @@
 <div>
     <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ __('Your Wheel Deals') }}</h1>
-        <x-reservation-button title="{{ __('New Reservation') }}" />
+        <x-reservation-button title="{{ __('New Reservation') }}"/>
     </div>
 
     <div class="overflow-x-auto">
@@ -50,7 +50,8 @@
                     <td class="px-4 py-3">{{ $reservation->start_date->format('d-m-Y') }}</td>
                     <td class="px-4 py-3">{{ $reservation->end_date->format('d-m-Y') }}</td>
                     <td class="px-4 py-3 text-right">{{ $reservation->passengers }}</td>
-                    <td class="px-4 py-3 text-right">XCG {{ number_format($reservation->total_price_cents / 100, 2) }}</td>
+                    <td class="px-4 py-3 text-right">
+                        XCG {{ number_format($reservation->total_price_cents / 100, 2) }}</td>
 
                     <td class="px-4 py-3 text-right space-x-2">
                         @can('pay', $reservation)

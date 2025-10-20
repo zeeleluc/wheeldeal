@@ -16,7 +16,7 @@ class AttachDraftReservationListener
 
         $draft = Reservation::find($event->draftId);
 
-        if (! $draft) {
+        if (!$draft) {
             Log::error("Draft reservation with ID {$event->draftId} not found.");
 
             return;
@@ -26,7 +26,7 @@ class AttachDraftReservationListener
 
         $draft->update(['user_id' => $user->id]);
 
-        if (! (new ReservationPolicy())->create($user)) {
+        if (!(new ReservationPolicy())->create($user)) {
             $draft->setStatus(ReservationType::CANCELLED);
             Log::warning("Draft reservation ID {$draft->id} cancelled because user ID {$user->id} has a recent reservation.");
         } else {
