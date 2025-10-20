@@ -34,11 +34,11 @@
                 </div>
                 <div class="flex justify-between">
                     <span class="font-medium">{{ __('Daily Price') }}:</span>
-                    <span>${{ number_format($reservation->total_price_cents / ($reservation->start_date->diffInDays($reservation->end_date) + 1) / 100, 2) }}</span>
+                    <span>XCG {{ number_format($reservation->total_price_cents / ($reservation->start_date->diffInDays($reservation->end_date) + 1) / 100, 2) }}</span>
                 </div>
                 <div class="flex justify-between items-center font-bold">
                     <span>{{ __('Total Price') }}:</span>
-                    <span>${{ number_format($reservation->total_price_cents / 100, 2) }}</span>
+                    <span>XCG {{ number_format($reservation->total_price_cents / 100, 2) }}</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="font-medium">{{ __('Status') }}:</span>

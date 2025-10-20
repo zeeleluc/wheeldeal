@@ -86,10 +86,10 @@
                             </div>
                             <div class="text-right">
                                 <span class="text-gray-800 dark:text-gray-100 font-bold text-lg">
-                                    ${{ number_format($car['dailyPriceCents'] / 100, 2) }}/{{ __('day') }}
+                                    XCG {{ number_format($car['dailyPriceCents'] / 100, 2) }}/{{ __('day') }}
                                 </span>
                                 <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
-                                    {{ __('Total:') }} ${{ number_format($car['totalPriceCents'] / 100, 2) }}
+                                    {{ __('Total:') }} XCG {{ number_format($car['totalPriceCents'] / 100, 2) }}
                                 </p>
                             </div>
                         </div>
@@ -139,11 +139,11 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="font-medium">{{ __('Daily Price:') }}</span>
-                        <span>${{ number_format($dailyPriceCents / 100, 2) }}</span>
+                        <span>XCG {{ number_format($dailyPriceCents / 100, 2) }}</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="font-medium">{{ __('Total Price:') }}</span>
-                        <span class="font-bold">${{ number_format($quoteCents / 100, 2) }}</span>
+                        <span class="font-bold">XCG {{ number_format($quoteCents / 100, 2) }}</span>
                     </div>
                 </div>
 
