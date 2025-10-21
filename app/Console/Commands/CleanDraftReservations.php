@@ -10,23 +10,27 @@ use Carbon\Carbon;
 class CleanDraftReservations extends Command
 {
     protected $signature = 'reservations:clean-drafts';
-    protected $description = 'Delete old draft reservations or pending payments';
+    protected $description = 'Mark old draft or pending payment reservations as aborted';
 
     public function handle(): bool
     {
         $draftThreshold = Carbon::now()->subMinutes(config('car.expiration.draft_minutes'));
         $pendingPaymentThreshold = Carbon::now()->subMinutes(config('car.expiration.pending_payment_minutes'));
 
-        $deletedDrafts = Reservation::whereNull('user_id')
+        $abortedDrafts = Reservation::whereNull('user_id')
             ->where('created_at', '<', $draftThreshold)
-            ->delete();
+            ->where('status', ReservationType::DRAFT)
+            ->update(['status' => ReservationType::ABORTED]);
 
-        $deletedPending = Reservation::where('status', ReservationType::PENDING_PAYMENT)
+        $abortedPending = Reservation::whereIn('status', [
+            ReservationType::PENDING_PAYMENT,
+            ReservationType::CANCELLED,
+        ])
             ->where('created_at', '<', $pendingPaymentThreshold)
-            ->delete();
+            ->update(['status' => ReservationType::ABORTED]);
 
-        $this->info("Deleted {$deletedDrafts} draft reservation(s).");
-        $this->info("Deleted {$deletedPending} pending payment reservation(s).");
+        $this->info("Marked {$abortedDrafts} draft reservation(s) as aborted.");
+        $this->info("Marked {$abortedPending} pending/cancelled reservation(s) as aborted.");
 
         return true;
     }

@@ -14,7 +14,7 @@
                 <th class="px-4 py-3 text-left text-gray-700 dark:text-gray-300 min-w-[130px]">{{ __('End Date') }}</th>
                 <th class="px-4 py-3 text-right text-gray-700 dark:text-gray-300">{{ __('Passengers') }}</th>
                 <th class="px-4 py-3 text-right text-gray-700 dark:text-gray-300 min-w-[180px]">{{ __('Total Price') }}</th>
-                <th class="px-4 py-3 text-right text-gray-700 dark:text-gray-300"></th>
+                <th class="px-4 py-3 text-right text-gray-700 dark:text-gray-300 min-w-[180px]"></th>
             </tr>
             </thead>
 
@@ -28,6 +28,11 @@
                             @case(\App\Enums\ReservationType::DRAFT)
                                 <span class="w-4 h-4 bg-gray-400 rounded-full"></span>
                                 <span class="text-gray-600 font-semibold">{{ __('Draft') }}</span>
+                                @break
+
+                            @case(\App\Enums\ReservationType::ABORTED)
+                                <span class="w-4 h-4 bg-gray-400 rounded-full"></span>
+                                <span class="text-gray-600 font-semibold">{{ __('Aborted') }}</span>
                                 @break
 
                             @case(\App\Enums\ReservationType::PENDING_PAYMENT)
@@ -58,6 +63,9 @@
                             <a href="{{ route('payment.show', $reservation) }}"
                                class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all">
                                 {{ __('Pay') }}
+                                @if ($reservation->payments()->count())
+                                    (Try Again)
+                                @endif
                             </a>
                         @else
                             <a href="{{ route('reservations.show', $reservation) }}"
@@ -68,22 +76,6 @@
                     </td>
                 </tr>
 
-                @if($reservation->payments->isNotEmpty() && !$reservation->hasSuccessfulPayment() && !$reservation->hasPendingPayment())
-                    <tr class="bg-gray-50 dark:bg-gray-900">
-                        <td></td>
-                        <td colspan="6" class="pl-8 pr-4 py-2">
-                            <div class="space-y-2">
-                                @foreach($reservation->payments as $payment)
-                                    <div class="flex items-center space-x-4 text-sm text-gray-700 dark:text-gray-300">
-                                        <span class="w-3 h-3 rounded-full {{ $payment->status->circleClass() }}"></span>
-                                        <span class="font-medium">{{ ucfirst($payment->status->value) }}</span>
-                                        <span class="text-gray-500 dark:text-gray-400">{{ $payment->identification }}</span>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </td>
-                    </tr>
-                @endif
             @endforeach
             </tbody>
         </table>

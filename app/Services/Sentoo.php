@@ -115,22 +115,18 @@ class Sentoo
             return;
         }
 
-        if ($payment->status->value !== $status->value) {
-            $payment->markAs($status);
+        $reservation = $payment->reservation;
 
-            $reservation = $payment->reservation;
-
-            if (PaymentStatus::SUCCESS === $status) {
-                $reservation->pay();
-            } elseif (in_array($status, [
-                PaymentStatus::ISSUED,
-                PaymentStatus::CANCELLED,
-                PaymentStatus::FAILED,
-                PaymentStatus::REJECTED,
-            ])) {
-                $reservation->setStatus(ReservationType::CANCELLED);
-            }
+        if (PaymentStatus::SUCCESS->value === $status->value) {
+            $reservation->paid();
+        } elseif (in_array($status->value, [
+            PaymentStatus::FAILED->value,
+            PaymentStatus::REJECTED->value,
+        ])) {
+            $reservation->setStatus(ReservationType::ABORTED);
         }
+
+        $payment->markAs($status);
 
         Log::info('Sentoo webhook processed', [
             'payment_id' => $payment->id,

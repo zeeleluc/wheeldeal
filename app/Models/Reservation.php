@@ -86,12 +86,10 @@ class Reservation extends Model
         $this->save();
     }
 
-    public function pay(?Carbon $date = null): void
+    public function paid(?Carbon $date = null): void
     {
-        if ($this->isPendingPayment()) {
-            $this->paid_at = $date ?? Carbon::now();
-            $this->setStatus(ReservationType::PAID);
-        }
+        $this->paid_at = $date ?? Carbon::now();
+        $this->setStatus(ReservationType::PAID);
     }
 
     public function isPaid(): bool
@@ -103,19 +101,6 @@ class Reservation extends Model
     {
         return ReservationType::PENDING_PAYMENT === $this->status
             || ReservationType::PAID === $this->status;
-    }
-
-    public function isPendingPayment(): bool
-    {
-        if (ReservationType::PENDING_PAYMENT !== $this->status) {
-            return false;
-        }
-
-        if ($this->payments()->where('status', PaymentStatus::PENDING)->exists()) {
-            return false;
-        }
-
-        return true;
     }
 
     public function isDraft(): bool

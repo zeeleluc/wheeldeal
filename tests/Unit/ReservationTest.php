@@ -116,7 +116,7 @@ class ReservationTest extends TestCase
             'car' => $car,
             'start_date' => Carbon::parse('2025-09-01'),
             'duration' => 5,
-            'status' => ReservationType::CANCELLED,
+            'status' => ReservationType::ABORTED,
         ]);
 
         $this->assertTrue($car->isAvailableForPeriod(

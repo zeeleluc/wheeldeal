@@ -27,7 +27,7 @@ class AttachDraftReservationListener
         $draft->update(['user_id' => $user->id]);
 
         if (!(new ReservationPolicy())->create($user)) {
-            $draft->setStatus(ReservationType::CANCELLED);
+            $draft->setStatus(ReservationType::ABORTED);
             Log::warning("Draft reservation ID {$draft->id} cancelled because user ID {$user->id} has a recent reservation.");
         } else {
             $draft->setStatus(ReservationType::PENDING_PAYMENT);

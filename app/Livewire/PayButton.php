@@ -14,6 +14,14 @@ class PayButton extends Component
     public string $description = '';
     public bool $loading = false;
     public ?string $error = null;
+    public string $title = 'Pay Now';
+
+    public function mount()
+    {
+        if ($this->reservation->payments->count()) {
+            $this->title = 'Try Again';
+        }
+    }
 
     public function pay()
     {

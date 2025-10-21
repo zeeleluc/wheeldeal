@@ -48,6 +48,10 @@
                                 <span class="w-4 h-4 bg-gray-400 rounded-full"></span>
                                 <span class="text-gray-600 font-semibold">{{ __('Draft') }}</span>
                                 @break
+                            @case(\App\Enums\ReservationType::ABORTED)
+                                <span class="w-4 h-4 bg-gray-400 rounded-full"></span>
+                                <span class="text-gray-600 font-semibold">{{ __('Aborted') }}</span>
+                                @break
                             @case(\App\Enums\ReservationType::PENDING_PAYMENT)
                                 <span class="w-4 h-4 border-4 border-orange-400 border-t-orange-600 rounded-full animate-spin"></span>
                                 <span class="text-orange-600 font-semibold">{{ __('Pending Payment') }}</span>

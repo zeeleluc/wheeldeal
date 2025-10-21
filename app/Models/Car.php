@@ -49,7 +49,7 @@ class Car extends Model
     public function isAvailableForPeriod(Carbon $start, Carbon $end): bool
     {
         return !$this->reservations()
-            ->where('status', '!=', ReservationType::CANCELLED->value)
+            ->where('status', '!=', ReservationType::ABORTED->value)
             ->where(function ($query) use ($start, $end) {
                 $query->whereBetween('start_date', [$start, $end])
                     ->orWhereBetween('end_date', [$start, $end])

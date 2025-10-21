@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Enums\PaymentStatus;
+use App\Enums\ReservationType;
 use Illuminate\Console\Command;
 use App\Models\Reservation;
 use App\Services\Sentoo;
@@ -25,12 +26,12 @@ class SyncPendingPayments extends Command
         $this->info('Checking pending payments...');
 
         $reservations = Reservation::with('payments')
-            ->where('status', 'pending_payment')
+            ->where('status', ReservationType::PENDING_PAYMENT)
             ->get();
 
         foreach ($reservations as $reservation) {
             $pendingPayment = $reservation->payments()
-                ->where('status', 'pending')
+                ->where('status', PaymentStatus::PENDING)
                 ->latest()
                 ->first();
 
@@ -47,8 +48,11 @@ class SyncPendingPayments extends Command
 
                 if (PaymentStatus::SUCCESS->value === $status->value) {
                     $reservation->pay();
-                } elseif (in_array($status->value, ['issued', 'cancelled', 'failed', 'rejected'])) {
-                    $reservation->setStatus('cancelled');
+                } elseif (in_array($status->value, [
+                    PaymentStatus::FAILED->value,
+                    PaymentStatus::REJECTED->value,
+                ])) {
+                    $reservation->setStatus(ReservationType::ABORTED);
                 }
 
                 $this->info("Updated reservation #{$reservation->id} and payment #{$pendingPayment->id} to status {$status->value}");

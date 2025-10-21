@@ -5,6 +5,7 @@ namespace App\Enums;
 enum ReservationType: string
 {
     case DRAFT = 'draft';
+    case ABORTED = 'aborted';
     case CANCELLED = 'cancelled';
     case PENDING_PAYMENT = 'pending_payment';
     case PAID = 'paid';
@@ -18,6 +19,7 @@ enum ReservationType: string
     {
         return match ($this) {
             self::DRAFT => 'Draft',
+            self::ABORTED => 'Aborted',
             self::CANCELLED => 'Cancelled',
             self::PENDING_PAYMENT => 'Pending Payment',
             self::PAID => 'Paid',

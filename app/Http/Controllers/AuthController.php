@@ -25,7 +25,7 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        $draftId = Session::pull('draft_reservation_id');
+        $draftId = Session::get('draft_reservation_id');
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -33,6 +33,7 @@ class AuthController extends Controller
 
             if ($user && $draftId) {
                 event(new DraftReservationAssigned($user, $draftId));
+                Session::remove('draft_reservation_id');
 
                 return redirect()->route('payment.show', ['reservation' => $draftId]);
             }
