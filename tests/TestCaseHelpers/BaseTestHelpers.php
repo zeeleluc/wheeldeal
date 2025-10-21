@@ -5,7 +5,10 @@ namespace Tests\TestCaseHelpers;
 use App\Models\Car;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Models\Payment;
+use App\Enums\PaymentStatus;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 trait BaseTestHelpers
 {
@@ -33,5 +36,18 @@ trait BaseTestHelpers
             ->status($status);
 
         return $factory->create();
+    }
+
+    protected function createPayment(Reservation $reservation, ?PaymentStatus $status = null): Payment
+    {
+        if (!$status) {
+            $status = PaymentStatus::SUCCESS;
+        }
+
+        return Payment::create([
+            'reservation_id' => $reservation->id,
+            'identification' => 'seeded-'.Str::uuid(),
+            'status' => $status,
+        ]);
     }
 }
