@@ -24,32 +24,10 @@
                     <td class="px-4 py-3 text-gray-800 dark:text-gray-100">{{ $reservation->car->name }}</td>
 
                     <td class="px-4 py-3 flex items-center space-x-2">
-                        @switch($reservation->status)
-                            @case(\App\Enums\ReservationType::DRAFT)
-                                <span class="w-4 h-4 bg-gray-400 rounded-full"></span>
-                                <span class="text-gray-600 font-semibold">{{ __('Draft') }}</span>
-                                @break
-
-                            @case(\App\Enums\ReservationType::ABORTED)
-                                <span class="w-4 h-4 bg-gray-400 rounded-full"></span>
-                                <span class="text-gray-600 font-semibold">{{ __('Aborted') }}</span>
-                                @break
-
-                            @case(\App\Enums\ReservationType::PENDING_PAYMENT)
-                                <span class="w-4 h-4 border-4 border-orange-400 border-t-orange-600 rounded-full animate-spin"></span>
-                                <span class="text-orange-600 font-semibold">{{ __('Pending Payment') }}</span>
-                                @break
-
-                            @case(\App\Enums\ReservationType::PAID)
-                                <span class="w-4 h-4 bg-green-500 rounded-full"></span>
-                                <span class="text-green-600 font-semibold">{{ __('Paid') }}</span>
-                                @break
-
-                            @case(\App\Enums\ReservationType::CANCELLED)
-                                <span class="w-4 h-4 bg-red-500 rounded-full"></span>
-                                <span class="text-red-600 font-semibold">{{ __('Cancelled') }}</span>
-                                @break
-                        @endswitch
+                        <span class="w-4 h-4 {{ $reservation->status->circleClass() }} rounded-full"></span>
+                        <span class="{{ $reservation->status->textClass() }} font-semibold">
+                            {{ __($reservation->status->title()) }}
+                        </span>
                     </td>
 
                     <td class="px-4 py-3">{{ $reservation->start_date->format('d-m-Y') }}</td>
