@@ -73,7 +73,8 @@ class Reservation extends Model
 
     public function paid(?Carbon $date = null): void
     {
+        $this->status = ReservationType::PAID;
         $this->paid_at = $date ?? Carbon::now();
-        $this->setStatus(ReservationType::PAID);
+        $this->save();
     }
 }

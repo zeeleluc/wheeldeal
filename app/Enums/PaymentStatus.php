@@ -11,7 +11,7 @@ enum PaymentStatus: string
     case ISSUED = 'issued';
     case CANCELLED = 'cancelled';
 
-    public function label(): string
+    public function title(): string
     {
         return match ($this) {
             self::SUCCESS => 'Success',
@@ -37,11 +37,22 @@ enum PaymentStatus: string
     public function circleClass(): string
     {
         return match ($this) {
-            self::SUCCESS => 'bg-green-500',
+            self::SUCCESS => 'bg-green-500 rounded-full',
             self::PENDING => 'border-4 border-orange-400 border-t-orange-600 animate-spin rounded-full',
-            self::REJECTED, self::FAILED => 'bg-red-500',
-            self::ISSUED => 'bg-blue-500',
-            self::CANCELLED => 'bg-gray-400',
+            self::REJECTED, self::FAILED => 'bg-red-500 rounded-full',
+            self::ISSUED => 'bg-blue-500 rounded-full',
+            self::CANCELLED => 'bg-gray-400 rounded-full',
+        };
+    }
+
+    public function textClass(): string
+    {
+        return match ($this) {
+            self::SUCCESS => 'text-green-600',
+            self::PENDING => 'text-orange-600',
+            self::REJECTED, self::FAILED => 'text-red-600',
+            self::ISSUED => 'text-blue-600',
+            self::CANCELLED => 'text-gray-600',
         };
     }
 

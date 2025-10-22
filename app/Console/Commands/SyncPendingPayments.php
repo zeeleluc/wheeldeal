@@ -45,6 +45,11 @@ class SyncPendingPayments extends Command
 
             if ($status && $status !== $pendingPayment->status) {
                 $pendingPayment->markAs($status);
+
+                if (PaymentStatus::SUCCESS === $status) {
+                    $reservation->paid();
+                }
+
                 $reservation->resolveStatus();
 
                 $this->info("Updated reservation #{$reservation->id} and payment #{$pendingPayment->id} to status {$status->value}");

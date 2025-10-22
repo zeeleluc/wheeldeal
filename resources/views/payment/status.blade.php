@@ -8,7 +8,7 @@
             <div class="flex items-center space-x-3">
                 <span class="{{ $statusEnum->circleClass() }} w-6 h-6"></span>
                 <span class="text-{{ $statusEnum->color() }}-600 font-semibold text-lg">
-                    {{ __($statusEnum->label()) }}
+                    {{ __($statusEnum->title()) }}
                 </span>
             </div>
 

@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Payment;
 use App\Models\Reservation;
 use App\Enums\PaymentStatus;
-use App\Enums\ReservationType;
 
 class Sentoo
 {
@@ -117,6 +116,10 @@ class Sentoo
 
         $payment->markAs($status);
         $payment->reservation->resolveStatus();
+
+        if (PaymentStatus::SUCCESS === $status) {
+            $payment->reservation->paid();
+        }
 
         Log::info('Sentoo webhook processed', [
             'payment_id' => $payment->id,

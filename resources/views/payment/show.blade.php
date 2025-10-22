@@ -32,36 +32,29 @@
                 <span class="font-bold">XCG {{ number_format($reservation->total_price_cents / 100, 2) }}</span>
             </div>
 
-            {{-- STATUS --}}
+            {{-- Reservation Status --}}
             <div class="flex items-center justify-between">
-                <span class="font-medium">{{ __('Status:') }}</span>
+                <span class="font-medium">{{ __('Reservation Status:') }}</span>
                 <div class="flex items-center space-x-2">
-                    @if($reservation->status === \App\Enums\ReservationType::DRAFT)
-                        <span class="w-4 h-4 bg-gray-400 rounded-full"></span>
-                        <span class="text-gray-600 font-semibold">{{ $reservation->status->title() }}</span>
-
-                    @elseif($reservation->status === \App\Enums\ReservationType::ABORTED)
-                        <span class="w-4 h-4 bg-gray-400 rounded-full"></span>
-                        <span class="text-gray-600 font-semibold">{{ $reservation->status->title() }}</span>
-
-                    @elseif($reservation->status === \App\Enums\ReservationType::CANCELLED)
-                        <span class="w-4 h-4 bg-red-500 rounded-full"></span>
-                        <span class="text-red-600 font-semibold">{{ $reservation->status->title() }}</span>
-
-                    @elseif($reservation->status === \App\Enums\ReservationType::PENDING_PAYMENT)
-                        <span class="w-4 h-4 border-4 border-orange-400 border-t-orange-600 rounded-full animate-spin"></span>
-                        <span class="text-orange-600 font-semibold">{{ $reservation->status->title() }}</span>
-
-                    @elseif($reservation->status === \App\Enums\ReservationType::PAID)
-                        <span class="w-4 h-4 bg-green-500 rounded-full"></span>
-                        <span class="text-green-600 font-semibold">{{ $reservation->status->title() }}</span>
-
-                    @else
-                        <span class="w-4 h-4 bg-gray-300 rounded-full"></span>
-                        <span class="text-gray-500 font-semibold">{{ __('Unknown') }}</span>
-                    @endif
+                    <span class="w-4 h-4 {{ $reservation->status->circleClass() }} rounded-full"></span>
+                    <span class="{{ $reservation->status->textClass() }} font-semibold">
+                        {{ __($reservation->status->title()) }}
+                    </span>
                 </div>
             </div>
+
+            {{-- Payment Status --}}
+            @if ($payment = $reservation->latestPayment())
+                <div class="flex items-center justify-between">
+                    <span class="font-medium">{{ __('Payment Status:') }}</span>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-4 h-4 {{ $payment->status->circleClass() }} rounded-full"></span>
+                        <span class="{{ $payment->status->textClass() }} font-semibold">
+                            {{ __($payment->status->title()) }}
+                        </span>
+                    </div>
+                </div>
+            @endif
 
             @if($reservation->paid_at)
                 <div class="flex items-center justify-between">
