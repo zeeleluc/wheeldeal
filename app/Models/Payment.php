@@ -28,39 +28,4 @@ class Payment extends Model
         $this->status = $status;
         $this->save();
     }
-
-    public function markAsSuccess(): void
-    {
-        $this->markAs(PaymentStatus::SUCCESS);
-    }
-
-    public function markAsPending(): void
-    {
-        $this->markAs(PaymentStatus::PENDING);
-    }
-
-    public function markAsRejected(): void
-    {
-        $this->markAs(PaymentStatus::REJECTED);
-    }
-
-    public function markAsFailed(): void
-    {
-        $this->markAs(PaymentStatus::FAILED);
-    }
-
-    public function markAsIssued(): void
-    {
-        $this->markAs(PaymentStatus::ISSUED);
-    }
-
-    public function markAsCancelled(): void
-    {
-        $this->markAs(PaymentStatus::CANCELLED);
-    }
-
-    public function isSuccessful(): bool
-    {
-        return PaymentStatus::SUCCESS === $this->status;
-    }
 }
