@@ -103,32 +103,25 @@ class CarModal extends Modal
 
         $totalCents = ((int) $this->amount) * 100 + ((int) $this->cents);
 
-        if ($this->carId) {
-            Car::findOrFail($this->carId)->update([
-                'name' => $this->name,
-                'license_plate' => $this->license_plate,
-                'type' => $this->type,
-                'capacity' => $this->capacity,
-                'base_price_cents' => $totalCents,
-                'apk_expiry' => $this->apk_expiry,
-            ]);
+        $attributes = [
+            'name' => $this->name,
+            'license_plate' => $this->license_plate,
+            'type' => $this->type,
+            'capacity' => $this->capacity,
+            'base_price_cents' => $totalCents,
+            'apk_expiry' => $this->apk_expiry,
+        ];
 
-            $this->dispatch('carUpdated');
-        } else {
-            Car::create([
-                'name' => $this->name,
-                'license_plate' => $this->license_plate,
-                'type' => $this->type,
-                'capacity' => $this->capacity,
-                'base_price_cents' => $totalCents,
-                'apk_expiry' => $this->apk_expiry,
-            ]);
+        $car = Car::updateOrCreate(
+            ['id' => $this->carId],
+            $attributes
+        );
 
-            $this->dispatch('carAdded');
-        }
+        $this->dispatch($this->carId ? 'carUpdated' : 'carAdded', $car->id);
 
         $this->closeModal();
     }
+
 
     public function render(): View
     {
