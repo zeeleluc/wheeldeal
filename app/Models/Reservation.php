@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\PaymentStatus;
 use App\Enums\ReservationType;
+use App\Helpers\ReservationStatusHelper;
 use App\Services\EndDateService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -84,6 +85,11 @@ class Reservation extends Model
 
         $this->status = $status;
         $this->save();
+    }
+
+    public function resolveStatus(): void
+    {
+        ReservationStatusHelper::resolve($this);
     }
 
     public function paid(?Carbon $date = null): void
